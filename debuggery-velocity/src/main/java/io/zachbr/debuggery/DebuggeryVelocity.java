@@ -28,10 +28,10 @@ import io.zachbr.debuggery.commands.base.CommandBase;
 
 @Plugin(id = "debuggery",
         name = "Debuggery",
-        version = "@version@",
+        version = "$VERSION",
         description = "A small plugin designed to expose API values at runtime.",
-        authors = {"Z750"},
-        url = "https://github.com/zachbr/Debuggery")
+        authors = {"Z750", "kennytv"},
+        url = "https://github.com/PaperMC/Debuggery")
 public class DebuggeryVelocity extends DebuggeryBase {
     private final ProxyServer server;
     private PluginContainer container;

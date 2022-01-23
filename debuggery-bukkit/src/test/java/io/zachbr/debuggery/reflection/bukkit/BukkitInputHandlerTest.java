@@ -22,8 +22,13 @@ import io.zachbr.debuggery.TestLoggerImpl;
 import io.zachbr.debuggery.reflection.types.InputException;
 import io.zachbr.debuggery.reflection.types.TypeHandler;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.BukkitBootstrap;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
@@ -108,6 +113,7 @@ public class BukkitInputHandlerTest {
         assertSame(Material.DIAMOND, ((ItemStack) output[0]).getType());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testMaterialData() throws InputException {
         Class[] inputTypes = {MaterialData.class};
@@ -207,9 +213,7 @@ public class BukkitInputHandlerTest {
         assertSame(PotionEffectType.INVISIBILITY, output[2]);
 
         // Test throws when no type exists
-        Assertions.assertThrows(InputException.class, () -> {
-            Object[] out = typeHandler.instantiateTypes(new Class[]{PotionEffectType.class}, Collections.singletonList("doesntExist"));
-        });
+        Assertions.assertThrows(InputException.class, () -> typeHandler.instantiateTypes(new Class[]{PotionEffectType.class}, Collections.singletonList("doesntExist")));
     }
 
     @Test
