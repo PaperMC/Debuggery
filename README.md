@@ -1,11 +1,13 @@
-Debuggery [![Build Status](https://papermc.io/ci/buildStatus/icon?job=Debuggery)](https://papermc.io/ci/job/Debuggery) [![Codecov](https://img.shields.io/codecov/c/github/zachbr/debuggery.svg)](https://codecov.io/gh/zachbr/Debuggery)
-=========
+# Debuggery
+
+[![Latest Release](https://img.shields.io/github/v/release/kennytv/Debuggery)](https://github.com/kennytv/Debuggery/releases)
+[![Build Status](https://github.com/kennytv/Debuggery/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/kennytv/Debuggery/actions)
+
+## Download
+See the [**releases page**](https://github.com/kennytv/Debuggery/releases).
 
 ## Building
-Debuggery requires **Java 11** to build.
-If you need a Java 8 build, check out the older releases [here](https://github.com/zachbr/Debuggery/releases/).
-
-I recommend using either the [OpenJDK reference builds] or the [AdoptOpenJDK builds].
+Debuggery requires **Java 11** to build. I'd recommend using [Adoptium builds].
 
 Once cloned, use the gradle wrapper included in this repository to build a runnable jar.
 
@@ -13,9 +15,7 @@ Once cloned, use the gradle wrapper included in this repository to build a runna
 
 You will find a compiled version in the `./build/libs/` directory.
 
-
-[OpenJDK reference builds]: http://jdk.java.net/11/
-[AdoptOpenJDK builds]: https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot
+[Adoptium builds]: https://adoptium.net/
 
 ## What is it?
 Debuggery is a small plugin designed to expose API values at runtime.
@@ -59,9 +59,3 @@ from Bukkit's space delimiter system.
 
 Furthermore, every conversion from `string -> object` is added manually, so some are currently missing. Feel free to
 open an issue or contribute them.
-
-## What's coming next?
-A true REPL leveraging Java 9's added functionality in this area. Obviously this feature would require Java 9+.
-
-## Do you have a timeline for feature development?
-Nope. I am pretty busy. If you'd like something done sooner, feel free to contribute.
