@@ -7,10 +7,10 @@ plugins {
 allprojects {
     apply(plugin = "java")
     group = "io.papermc.debuggery"
-    version = "1.3.0"
+    version = "1.4.0-SNAPSHOT"
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 

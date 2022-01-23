@@ -17,17 +17,9 @@
 
 package io.zachbr.debuggery.reflection.types.handlers.base;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
- * Super interface for methods common to both Input and Output handlers
+ * An {@link InputHandler} that handles input for sub-types as well as
+ * its base-type
  */
-public interface Handler<T> {
-
-    /**
-     * Gets the {@link Class} this IHandler is responsible for handling
-     *
-     * @return relevant class
-     */
-    @NotNull Class<T> getRelevantClass();
+public interface InputPolymorphicHandler<T> extends InputHandler<T> {
 }

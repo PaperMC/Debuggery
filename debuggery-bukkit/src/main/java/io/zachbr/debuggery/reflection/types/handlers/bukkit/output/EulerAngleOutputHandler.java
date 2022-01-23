@@ -15,19 +15,22 @@
  * along with Debuggery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.zachbr.debuggery.reflection.types.handlers.base;
+package io.zachbr.debuggery.reflection.types.handlers.bukkit.output;
 
+import io.zachbr.debuggery.reflection.types.handlers.base.OutputHandler;
+import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * Super interface for methods common to both Input and Output handlers
- */
-public interface Handler<T> {
+public class EulerAngleOutputHandler implements OutputHandler<EulerAngle> {
 
-    /**
-     * Gets the {@link Class} this IHandler is responsible for handling
-     *
-     * @return relevant class
-     */
-    @NotNull Class<T> getRelevantClass();
+    @Override
+    public @Nullable String getFormattedOutput(EulerAngle angle) {
+        return "{" + angle.getX() + ", " + angle.getY() + ", " + angle.getZ() + "}";
+    }
+
+    @Override
+    public @NotNull Class<EulerAngle> getRelevantClass() {
+        return EulerAngle.class;
+    }
 }

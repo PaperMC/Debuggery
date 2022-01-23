@@ -15,28 +15,26 @@
  * along with Debuggery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.zachbr.debuggery.reflection.types.handlers.base.platform;
+package io.zachbr.debuggery.reflection.types.handlers.bukkit.input;
 
 import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
+import io.zachbr.debuggery.util.StringUtil;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * A platform extension is a platform-specific {@link InputHandler}
- * extension that allows specific platforms to override and provide alternative implementations for instantiating
- * objects that are otherwise defined in the common modules.
- *
- * @param <T> class type
- */
-@FunctionalInterface
-public interface PlatformExtension<T> {
-    /**
-     * Instantiates an instance of T using the given params
-     *
-     * @param args command input
-     * @param clazz requested class type
-     * @param sender platform command sender instance
-     * @return instantiated object or null if it could not be instantiated
-     */
-    @Nullable T getInstance(String args, Class<?> clazz, @NotNull PlatformSender<?> sender);
+public class VectorInputHandler implements InputHandler<Vector> {
+
+    @Override
+    public @NotNull Vector instantiateInstance(String input, Class<? extends Vector> clazz, @Nullable PlatformSender<?> sender) {
+        double[] parsed = StringUtil.parseDoublesFromString(input, 3);
+
+        return new Vector(parsed[0], parsed[1], parsed[2]);
+    }
+
+    @Override
+    public @NotNull Class<Vector> getRelevantClass() {
+        return Vector.class;
+    }
 }

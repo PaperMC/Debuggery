@@ -20,7 +20,9 @@ package io.zachbr.debuggery.reflection.types;
 import io.zachbr.debuggery.Logger;
 import io.zachbr.debuggery.TestLoggerImpl;
 import io.zachbr.debuggery.reflection.ReflTestClass;
-import io.zachbr.debuggery.reflection.types.handlers.base.*;
+import io.zachbr.debuggery.reflection.types.handlers.base.Handler;
+import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.OutputHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
 import io.zachbr.debuggery.reflection.types.implementations.AnEnum;
 import org.jetbrains.annotations.NotNull;
@@ -29,14 +31,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TypeHandlerTest {
-    private static final Class CASE_NEVER_WILL_BE_REGISTERED = Assertions.class;
+    private static final Class<?> CASE_NEVER_WILL_BE_REGISTERED = Assertions.class;
     private final Logger logger = new TestLoggerImpl();
     private final TypeHandler typeHandler = new TypeHandler(logger);
 
@@ -85,31 +91,31 @@ public class TypeHandlerTest {
 
         // attempt to add a string handler
         // this should clash and fail, returning false
-        IHandler iStringHandler = new IHandler() {
+        InputHandler<String> iStringHandler = new InputHandler<>() {
             @NotNull
             @Override
-            public Object instantiateInstance(String input, Class<?> clazz, @Nullable PlatformSender<?> sender) {
+            public String instantiateInstance(String input, Class<? extends String> clazz, @Nullable PlatformSender<?> sender) {
                 throw new HandlerNotImplementedException(clazz);
             }
 
             @NotNull
             @Override
-            public Class<?> getRelevantClass() {
+            public Class<String> getRelevantClass() {
                 return String.class;
             }
         };
 
         // same but with an output handler
-        OHandler oCollectionHandler = new OHandler() {
+        OutputHandler<Collection> oCollectionHandler = new OutputHandler<>() {
             @NotNull
             @Override
-            public String getFormattedOutput(Object object) {
+            public String getFormattedOutput(Collection object) {
                 throw new HandlerNotImplementedException(object.getClass());
             }
 
             @NotNull
             @Override
-            public Class<?> getRelevantClass() {
+            public Class<Collection> getRelevantClass() {
                 return Collection.class;
             }
         };
@@ -118,33 +124,31 @@ public class TypeHandlerTest {
         final boolean collectionOutputAddSuccess = typeHandler.registerHandler(oCollectionHandler);
 
         // now test that adding a random new class will work
-        Class testClassToRegister = ReflTestClass.class;
-
-        IHandler iLocalClassHandler = new IHandler() {
+        InputHandler<ReflTestClass> iLocalClassHandler = new InputHandler<>() {
             @NotNull
             @Override
-            public Object instantiateInstance(String input, Class<?> clazz, @Nullable PlatformSender<?> sender) {
+            public ReflTestClass instantiateInstance(String input, Class<? extends ReflTestClass> clazz, @Nullable PlatformSender<?> sender) {
                 throw new HandlerNotImplementedException(clazz);
             }
 
             @NotNull
             @Override
-            public Class<?> getRelevantClass() {
-                return testClassToRegister;
+            public Class<ReflTestClass> getRelevantClass() {
+                return ReflTestClass.class;
             }
         };
 
-        OHandler oLocalClassHandler = new OHandler() {
+        OutputHandler<ReflTestClass> oLocalClassHandler = new OutputHandler<>() {
             @NotNull
             @Override
-            public String getFormattedOutput(Object object) {
+            public String getFormattedOutput(ReflTestClass object) {
                 throw new HandlerNotImplementedException(object.getClass());
             }
 
             @NotNull
             @Override
-            public Class<?> getRelevantClass() {
-                return testClassToRegister;
+            public Class<ReflTestClass> getRelevantClass() {
+                return ReflTestClass.class;
             }
         };
 
@@ -164,10 +168,10 @@ public class TypeHandlerTest {
         final boolean oCollectionRemoveByClassSuccess = typeHandler.removeOutputHandlerFor(Collection.class);
 
         // attempt removing handlers for a class that doesn't exist
-        IHandler iNotRegistered = new IHandler() {
+        InputHandler<?> iNotRegistered = new InputHandler() {
             @NotNull
             @Override
-            public Object instantiateInstance(String input, Class<?> clazz, @Nullable PlatformSender<?> sender) {
+            public Object instantiateInstance(String input, Class clazz, @Nullable PlatformSender sender) {
                 throw new HandlerNotImplementedException(clazz);
             }
 
@@ -178,7 +182,7 @@ public class TypeHandlerTest {
             }
         };
 
-        OHandler oNotRegistered = new OHandler() {
+        OutputHandler<?> oNotRegistered = new OutputHandler() {
             @NotNull
             @Override
             public String getFormattedOutput(Object object) {

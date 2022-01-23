@@ -20,18 +20,11 @@ package io.zachbr.debuggery.reflection;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class ReflectionUtil {
-
-    /**
-     * Tests if a given string starts with a vowel
-     */
-    private static final Predicate<String> startsWithVowel = s -> {
-        s = s.toLowerCase();
-        return s.startsWith("a") || s.startsWith("e") || s.startsWith("i") || s.startsWith("o") || s.startsWith("u");
-    };
+public final class ReflectionUtil {
 
     /**
      * Attempts to parse a string for method parameters
@@ -44,7 +37,7 @@ public class ReflectionUtil {
      * @return a best-effort list of method params from the given list
      */
     public static @NotNull List<String> getArgsForMethod(@NotNull List<String> args, @NotNull Method method) {
-        if (args.size() == 0 && method.getParameterCount() == 0) {
+        if (args.isEmpty() && method.getParameterCount() == 0) {
             return Collections.emptyList();
         }
 
@@ -74,10 +67,9 @@ public class ReflectionUtil {
      * @return a formatted name
      */
     public static @NotNull String getFormattedMethodSignature(Method method) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(method.getName());
+        StringBuilder builder = new StringBuilder(method.getName());
 
-        builder.append("(");
+        builder.append('(');
         boolean first = true;
         for (Class<?> type : method.getParameterTypes()) {
             if (first) {
@@ -87,13 +79,13 @@ public class ReflectionUtil {
                 builder.append(", ").append(type.getSimpleName());
             }
         }
-        builder.append(")");
+        builder.append(')');
 
         return builder.toString();
     }
 
     public static @NotNull String getMethodId(Method method) {
-        return getFormattedMethodSignature(method).replaceAll(" ", "");
+        return getFormattedMethodSignature(method).replace(" ", "");
     }
 
     /**
@@ -108,9 +100,9 @@ public class ReflectionUtil {
         final String returnTypeName = returnType.getSimpleName();
         String returnInfo;
 
-        if (returnType.equals(Void.TYPE)) {
+        if (returnType == Void.TYPE) {
             returnInfo = "returns void.";
-        } else if (startsWithVowel.test(returnTypeName)) {
+        } else if (startsWithVowel(returnTypeName)) {
             returnInfo = "returns an " + returnTypeName;
         } else {
             returnInfo = "returns a " + returnTypeName;
@@ -118,5 +110,19 @@ public class ReflectionUtil {
 
         return "Method " + methodName + " requires " + method.getParameterCount() + " args and " + returnInfo + "\n"
                 + ReflectionUtil.getFormattedMethodSignature(method);
+    }
+
+    /**
+     * Returns whether the given string starts with a vowel
+     *
+     * @return whether the given string starts with a vowel
+     */
+    private static boolean startsWithVowel(@NotNull final String s) {
+        if (s.isEmpty()) {
+            return false;
+        }
+
+        final char c = Character.toLowerCase(s.charAt(0));
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
     }
 }

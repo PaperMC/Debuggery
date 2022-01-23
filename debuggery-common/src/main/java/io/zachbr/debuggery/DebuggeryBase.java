@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public abstract class DebuggeryBase {
+    public static final String VERSION = "$VERSION";
     private static final boolean DEBUG_MODE = Boolean.getBoolean("debuggery.debug");
     private final MethodMapProvider methodMapProvider;
     private final ReflectionChainFactory chainFactory;

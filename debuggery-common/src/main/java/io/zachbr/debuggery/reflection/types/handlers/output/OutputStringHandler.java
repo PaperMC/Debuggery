@@ -15,19 +15,21 @@
  * along with Debuggery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.zachbr.debuggery.reflection.types.handlers.base;
+package io.zachbr.debuggery.reflection.types.handlers.output;
 
+import io.zachbr.debuggery.reflection.types.handlers.base.OutputHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * Super interface for methods common to both Input and Output handlers
- */
-public interface Handler<T> {
+public class OutputStringHandler implements OutputHandler<String> {
 
-    /**
-     * Gets the {@link Class} this IHandler is responsible for handling
-     *
-     * @return relevant class
-     */
-    @NotNull Class<T> getRelevantClass();
+    @Override
+    public @Nullable String getFormattedOutput(String object) {
+        return object;
+    }
+
+    @Override
+    public @NotNull Class<String> getRelevantClass() {
+        return String.class;
+    }
 }

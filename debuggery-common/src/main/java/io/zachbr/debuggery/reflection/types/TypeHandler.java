@@ -18,12 +18,23 @@
 package io.zachbr.debuggery.reflection.types;
 
 import io.zachbr.debuggery.Logger;
-import io.zachbr.debuggery.reflection.types.handlers.base.*;
+import io.zachbr.debuggery.reflection.types.handlers.base.Handler;
+import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.InputPolymorphicHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.OutputHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Manages all type handling
@@ -36,10 +47,10 @@ public final class TypeHandler {
     private final Logger logger;
     // input handlers
     // keep these two in sync on additions and removals
-    private final Map<Class<?>, IHandler> inputHandlers = new HashMap<>();
-    private final Set<IPolymorphicHandler> polymorphicHandlers = new LinkedHashSet<>();
+    private final Map<Class<?>, InputHandler<?>> inputHandlers = new HashMap<>();
+    private final Set<InputPolymorphicHandler> polymorphicHandlers = new LinkedHashSet<>();
     // output handlers
-    private final Set<OHandler> outputHandlers = new LinkedHashSet<>();
+    private final Set<OutputHandler<?>> outputHandlers = new LinkedHashSet<>();
 
     public TypeHandler(Logger logger) {
         this.logger = logger;
@@ -53,14 +64,14 @@ public final class TypeHandler {
      * @param object instance to get output for
      * @return String output or null
      */
-    public @Nullable String getOutputFor(@Nullable Object object) {
+    public @Nullable <T> String getOutputFor(@Nullable T object) {
         // if the object is null, just return null
         // indicating that we shouldn't send any input at all
         if (object == null) {
             return null;
         }
 
-        OHandler handler = getOHandlerForClass(object.getClass());
+        OutputHandler<T> handler = getOHandlerForClass((Class<? extends T>) object.getClass());
         if (handler != null) {
             return handler.getFormattedOutput(object);
         } else {
@@ -106,16 +117,14 @@ public final class TypeHandler {
     /**
      * Creates new instances of the requested class types using the provided input
      *
-     * @param clazz  {@link Class} type to be instantiated
-     * @param input  The input to be used in the instantiation of the new instances
+     * @param clazz {@link Class} type to be instantiated
+     * @param input The input to be used in the instantiation of the new instances
      * @return An instance of the requested class or null
      * @throws InputException when there's an issue instantiating the requested type
      */
-    private @Nullable Object instantiateObjectFor(Class<?> clazz, String input, @Nullable PlatformSender<?> sender) throws InputException {
+    private @Nullable <T> T instantiateObjectFor(Class<T> clazz, String input, @Nullable PlatformSender<?> sender) throws InputException {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(input);
-
-        Object out = null;
 
         // if the user has explicitly requested null (via '\null\') then just give them null
         if (input.equals(NULL_INSTANCE_KEYWORD)) {
@@ -123,10 +132,10 @@ public final class TypeHandler {
         }
 
         // otherwise, lookup a handler and use it to instantiate an object
-        IHandler handler = getIHandlerForClass(clazz);
+        InputHandler<T> handler = getIHandlerForClass(clazz);
         if (handler != null) {
             try {
-                out = handler.instantiateInstance(input, clazz, sender);
+                return handler.instantiateInstance(input, clazz, sender);
             } catch (Exception ex) {
                 // re-wrap exception and toss up the stack
                 throw InputException.of(ex);
@@ -134,8 +143,6 @@ public final class TypeHandler {
         } else {
             throw InputException.of(new HandlerNotImplementedException(clazz));
         }
-
-        return out;
     }
 
     /**
@@ -144,15 +151,15 @@ public final class TypeHandler {
      * @param handler type handler
      * @return true if successfully registered
      */
-    public boolean registerHandler(Handler handler) {
+    public boolean registerHandler(Handler<?> handler) {
         Objects.requireNonNull(handler);
 
         logger.debug("-- Attempting to register handler: " + handler + " for class: " + handler.getRelevantClass().getName());
 
-        if (handler instanceof IHandler) {
-            return registerInputHandler((IHandler) handler);
+        if (handler instanceof InputHandler<?>) {
+            return registerInputHandler((InputHandler) handler);
         } else {
-            return registerOutputHandler((OHandler) handler);
+            return registerOutputHandler((OutputHandler) handler);
         }
     }
 
@@ -162,12 +169,12 @@ public final class TypeHandler {
      * @param handler type handler to register
      * @return true if successfully registered
      */
-    private boolean registerInputHandler(IHandler handler) {
+    private boolean registerInputHandler(InputHandler<?> handler) {
         final Class<?> handlerRelevantClass = handler.getRelevantClass();
 
         // first, make sure there isn't an existing handler already registered to this type
         // do NOT factor polymorphic handlers into this lookup, allow them to be overridden with specific implementations
-        final IHandler existingHandler = getIHandlerForClass(handlerRelevantClass, false);
+        final InputHandler<?> existingHandler = getIHandlerForClass(handlerRelevantClass, false);
         if (existingHandler != null) {
             logger.debug("!! Cannot register " + handler + ", conflicts with " + existingHandler);
             return false;
@@ -177,8 +184,8 @@ public final class TypeHandler {
 
             // if this handler is polymorphic, add it to that collection as well
             // we MUST keep these in sync with one another
-            if (handler instanceof IPolymorphicHandler) {
-                polymorphicHandlers.add((IPolymorphicHandler) handler);
+            if (handler instanceof InputPolymorphicHandler) {
+                polymorphicHandlers.add((InputPolymorphicHandler) handler);
                 logger.debug("-- -- Handler " + handler + " registered as polymorphic");
             }
 
@@ -192,9 +199,9 @@ public final class TypeHandler {
      * @param handler type handler to register
      * @return true if successfully added
      */
-    private boolean registerOutputHandler(OHandler handler) {
+    private boolean registerOutputHandler(OutputHandler<?> handler) {
         // first, make sure this handler isn't already registered
-        OHandler existingHandler = getOHandlerForClass(handler.getRelevantClass());
+        OutputHandler<?> existingHandler = getOHandlerForClass(handler.getRelevantClass());
         if (existingHandler != null) {
             logger.debug("!! Cannot register " + handler + ", conflicts with " + existingHandler);
             return false;
@@ -212,20 +219,20 @@ public final class TypeHandler {
      * @param handler type handler
      * @return true if successfully removed
      */
-    boolean removeHandler(@NotNull Handler handler) {
+    boolean removeHandler(@NotNull Handler<?> handler) {
         Objects.requireNonNull(handler);
 
         logger.debug("Attempting to remove handler: " + handler);
 
-        if (handler instanceof IHandler) {
-            return removeInputHandler((IHandler) handler);
+        if (handler instanceof InputHandler) {
+            return removeInputHandler((InputHandler) handler);
         } else {
-            return removeOutputHandler((OHandler) handler);
+            return removeOutputHandler((OutputHandler) handler);
         }
     }
 
     /**
-     * Removes a {@link IHandler} from the input system based on its class type
+     * Removes a {@link InputHandler} from the input system based on its class type
      *
      * @param clazz the {@link Class} type associated with the handler
      * @return true if successfully removed
@@ -234,7 +241,7 @@ public final class TypeHandler {
         Objects.requireNonNull(clazz);
         logger.debug("Attempting to remove handler for class: " + clazz + " from Input Handlers.");
 
-        IHandler handler = getIHandlerForClass(clazz);
+        InputHandler<?> handler = getIHandlerForClass(clazz);
         if (handler != null) {
             return removeHandler(handler);
         } else {
@@ -244,7 +251,7 @@ public final class TypeHandler {
     }
 
     /**
-     * Removes a {@link OHandler} from the output system based on its class type
+     * Removes a {@link OutputHandler} from the output system based on its class type
      *
      * @param clazz the {@link Class} type associated with the handler
      * @return true if successfully removed
@@ -253,7 +260,7 @@ public final class TypeHandler {
         Objects.requireNonNull(clazz);
         logger.debug("Attempting to remove handler for class: " + clazz + " from Output Handlers.");
 
-        OHandler handler = getOHandlerForClass(clazz);
+        OutputHandler<?> handler = getOHandlerForClass(clazz);
         if (handler != null) {
             return removeHandler(handler);
         } else {
@@ -268,7 +275,7 @@ public final class TypeHandler {
      * @param handler type handler to remove
      * @return true if successfully removed
      */
-    private boolean removeInputHandler(IHandler handler) {
+    private boolean removeInputHandler(InputHandler<?> handler) {
         final boolean removed = inputHandlers.remove(handler.getRelevantClass(), handler);
 
         if (!removed) {
@@ -279,7 +286,7 @@ public final class TypeHandler {
 
             // if we removed earlier and this is polymorphic, remove it from that collection
             // we MUST keep these in sync with one another
-            if (handler instanceof IPolymorphicHandler) {
+            if (handler instanceof InputPolymorphicHandler) {
                 polymorphicHandlers.remove(handler);
                 logger.debug("Removed handler " + handler + " from polymorphic map");
             }
@@ -294,7 +301,7 @@ public final class TypeHandler {
      * @param handler type handler to remove
      * @return true if successfully removed
      */
-    private boolean removeOutputHandler(OHandler handler) {
+    private boolean removeOutputHandler(OutputHandler<?> handler) {
         final boolean removed = outputHandlers.remove(handler);
 
         if (!removed) {
@@ -314,22 +321,22 @@ public final class TypeHandler {
      * @param clazz {@link Class} type to look for a handler for
      * @return Relevant handler or null if none could be found
      */
-    public @Nullable IHandler getIHandlerForClass(Class<?> clazz) {
+    public @Nullable <T> InputHandler<T> getIHandlerForClass(Class<? extends T> clazz) {
         return getIHandlerForClass(clazz, true);
     }
 
-    private @Nullable IHandler getIHandlerForClass(Class<?> clazz, boolean usePolymorphic) {
+    private @Nullable <T> InputHandler<T> getIHandlerForClass(Class<? extends T> clazz, boolean usePolymorphic) {
         Objects.requireNonNull(clazz);
 
         // first check for an explicit input handler to use for this type
-        IHandler handler = inputHandlers.get(clazz);
+        InputHandler<T> handler = (InputHandler<T>) inputHandlers.get(clazz);
         if (handler != null) {
             logger.debug("Found input handler " + handler + " for " + clazz);
         } else if (usePolymorphic) {
             // otherwise fall back to a polymorphic handler lookup
             logger.debug("Could not find any specific input handler for " + clazz + ", using polymorphic lookup...");
             handler = getGenericPolymorphicForFrom(clazz, polymorphicHandlers, "Input Handlers");
-        }  else {
+        } else {
             logger.debug("Could not find any specific input handler for " + clazz + ", but not using polymorphic lookup.");
         }
 
@@ -337,15 +344,15 @@ public final class TypeHandler {
     }
 
     /**
-     * Gets the relevant {@link OHandler} for the given {@link Class}
+     * Gets the relevant {@link OutputHandler} for the given {@link Class}
      *
      * @param clazz {@link} Class to search with
      * @return relevant output handler or null if none could be found
      */
-    private @Nullable OHandler getOHandlerForClass(Class<?> clazz) {
+    private @Nullable <T> OutputHandler<T> getOHandlerForClass(Class<? extends T> clazz) {
         Objects.requireNonNull(clazz);
 
-        return getGenericPolymorphicForFrom(clazz, outputHandlers, "Output Handlers");
+        return (OutputHandler<T>) getGenericPolymorphicForFrom(clazz, outputHandlers, "Output Handlers");
     }
 
     /**
@@ -358,12 +365,12 @@ public final class TypeHandler {
      * @param <T>       {@link Handler} type to get
      * @return relevant handler or null
      */
-    private <T extends Handler> @Nullable T getGenericPolymorphicForFrom(Class<?> clazz, Collection<T> toSearch, @Nullable String debugName) {
+    private <T, H extends Handler<?>> @Nullable H getGenericPolymorphicForFrom(Class<? extends T> clazz, Collection<H> toSearch, @Nullable String debugName) {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(toSearch);
 
         final String debugMsg = debugName == null ? toSearch.toString() : debugName;
-        for (T handler : toSearch) {
+        for (H handler : toSearch) {
             if (handler.getRelevantClass().isAssignableFrom(clazz)) {
                 logger.debug("Found existing polymorphic handler " + handler + " for " + clazz + " in " + debugMsg);
                 return handler;
@@ -379,7 +386,7 @@ public final class TypeHandler {
      *
      * @return unmodifiable collection
      */
-    public @NotNull Collection<IHandler> getAllInputHandlers() {
+    public @NotNull Collection<InputHandler> getAllInputHandlers() {
         return Collections.unmodifiableCollection(inputHandlers.values());
     }
 
@@ -388,7 +395,7 @@ public final class TypeHandler {
      *
      * @return unmodifiable collection
      */
-    public @NotNull Collection<OHandler> getAllOutputHandlers() {
+    public @NotNull Collection<OutputHandler> getAllOutputHandlers() {
         return Collections.unmodifiableCollection(outputHandlers);
     }
 }

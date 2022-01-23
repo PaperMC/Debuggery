@@ -20,7 +20,7 @@ package io.zachbr.debuggery.reflection.types.handlers.bukkit;
 import io.zachbr.debuggery.Logger;
 import io.zachbr.debuggery.reflection.types.TypeHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.Handler;
-import io.zachbr.debuggery.reflection.types.handlers.base.IHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformExtension;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSpecific;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.input.*;
@@ -43,40 +43,40 @@ public class BukkitBootstrap {
         //
 
         // order can matter here
-        bukkitHandlers.add(new IBukkitClassHandler());
-        bukkitHandlers.add(new IDifficultyHandler());
-        bukkitHandlers.add(new IEntityHandler());
-        bukkitHandlers.add(new IEulerAngleHandler());
-        bukkitHandlers.add(new IGameModeHandler());
-        bukkitHandlers.add(new IInventoryHandler());
-        bukkitHandlers.add(new IItemStackHandler());
-        bukkitHandlers.add(new ILocationHandler());
-        bukkitHandlers.add(new IMaterialDataHandler());
-        bukkitHandlers.add(new IMaterialHandler());
-        bukkitHandlers.add(new INamespacedKeyHandler());
-        bukkitHandlers.add(new IPermissionHandler());
-        bukkitHandlers.add(new IPlayerHandler());
-        bukkitHandlers.add(new IPotionEffectHandler());
-        bukkitHandlers.add(new IPotionEffectTypeHandler());
-        bukkitHandlers.add(new IVectorHandler());
+        bukkitHandlers.add(new BukkitClassInputHandler());
+        bukkitHandlers.add(new DifficultyInputHandler());
+        bukkitHandlers.add(new EntityInputHandler());
+        bukkitHandlers.add(new EulerAngleInputHandler());
+        bukkitHandlers.add(new GameModeInputHandler());
+        bukkitHandlers.add(new InventoryInputHandler());
+        bukkitHandlers.add(new ItemStackInputHandler());
+        bukkitHandlers.add(new LocationInputHandler());
+        bukkitHandlers.add(new MaterialDataInputHandler());
+        bukkitHandlers.add(new MaterialInputHandler());
+        bukkitHandlers.add(new NamespacedKeyInputHandler());
+        bukkitHandlers.add(new PermissionInputHandler());
+        bukkitHandlers.add(new PlayerInputHandler());
+        bukkitHandlers.add(new PotionEffectInputHandler());
+        bukkitHandlers.add(new PotionEffectTypeInputHandler());
+        bukkitHandlers.add(new VectorInputHandler());
         // register polymorphics last
-        bukkitHandlers.add(new IBlockDataHandler());
+        bukkitHandlers.add(new BlockDataInputHandler());
 
         //
         // Output Handlers
         //
 
         // order can matter here
-        bukkitHandlers.add(new OBlockStateHandler());
-        bukkitHandlers.add(new OEntityHandler()); // above CommandSender
-        bukkitHandlers.add(new OCommandSender());
-        bukkitHandlers.add(new OEulerAngleHandler());
-        bukkitHandlers.add(new OHelpMapHandler());
-        bukkitHandlers.add(new OInventoryHandler(this.typeHandler));
-        bukkitHandlers.add(new OMessengerHandler(this.typeHandler));
-        bukkitHandlers.add(new OOfflinePlayerHandler());
-        bukkitHandlers.add(new OPermissionAttachmentInfoHandler());
-        bukkitHandlers.add(new OWorldBorderHandler());
+        bukkitHandlers.add(new OutputBlockStateHandler());
+        bukkitHandlers.add(new EntityOutputHandler()); // above CommandSender
+        bukkitHandlers.add(new CommandSenderOutputHandler());
+        bukkitHandlers.add(new EulerAngleOutputHandler());
+        bukkitHandlers.add(new HelpMapOutputHandler());
+        bukkitHandlers.add(new InventoryOutputHandler(this.typeHandler));
+        bukkitHandlers.add(new MessengerOutputHandler(this.typeHandler));
+        bukkitHandlers.add(new OfflinePlayerOutputHandler());
+        bukkitHandlers.add(new PermissionAttachmentInfoOutputHandler());
+        bukkitHandlers.add(new WorldBorderOutputHandler());
 
         //
         // Register
@@ -104,7 +104,7 @@ public class BukkitBootstrap {
     }
 
     private <T> void addExtensionFor(Class<T> clazz, PlatformExtension<T> extension) {
-        IHandler handler = typeHandler.getIHandlerForClass(clazz);
+        InputHandler<?> handler = typeHandler.getIHandlerForClass(clazz);
         if (handler == null) {
             throw new IllegalArgumentException("Cannot get input handler for type: " + clazz.getCanonicalName());
         }

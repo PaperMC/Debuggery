@@ -19,7 +19,6 @@ package io.zachbr.debuggery;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.ProxyServer;
 import io.zachbr.debuggery.commands.ProxyPlayerCommand;
 import io.zachbr.debuggery.commands.ProxyServerCommand;
@@ -28,13 +27,12 @@ import io.zachbr.debuggery.commands.base.CommandBase;
 
 @Plugin(id = "debuggery",
         name = "Debuggery",
-        version = "$VERSION",
+        version = DebuggeryBase.VERSION,
         description = "A small plugin designed to expose API values at runtime.",
         authors = {"Z750", "kennytv"},
         url = "https://github.com/PaperMC/Debuggery")
 public class DebuggeryVelocity extends DebuggeryBase {
     private final ProxyServer server;
-    private PluginContainer container;
 
     @Inject
     DebuggeryVelocity(ProxyServer server, org.slf4j.Logger logger) {
@@ -48,11 +46,7 @@ public class DebuggeryVelocity extends DebuggeryBase {
 
     @Override
     String getPluginVersion() {
-        if (this.container == null) {
-            this.container = server.getPluginManager().getPlugin("debuggery").orElseThrow();
-        }
-
-        return this.container.getDescription().getVersion().orElseThrow();
+        return DebuggeryBase.VERSION;
     }
 
     @Override

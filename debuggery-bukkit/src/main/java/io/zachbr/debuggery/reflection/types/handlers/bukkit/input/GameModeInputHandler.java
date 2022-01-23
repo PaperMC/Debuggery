@@ -15,28 +15,25 @@
  * along with Debuggery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.zachbr.debuggery.reflection.types.handlers.base.platform;
+package io.zachbr.debuggery.reflection.types.handlers.bukkit.input;
 
 import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
+import io.zachbr.debuggery.reflection.types.handlers.input.EnumInputHandler;
+import io.zachbr.debuggery.util.StringUtil;
+import org.bukkit.GameMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * A platform extension is a platform-specific {@link InputHandler}
- * extension that allows specific platforms to override and provide alternative implementations for instantiating
- * objects that are otherwise defined in the common modules.
- *
- * @param <T> class type
- */
-@FunctionalInterface
-public interface PlatformExtension<T> {
-    /**
-     * Instantiates an instance of T using the given params
-     *
-     * @param args command input
-     * @param clazz requested class type
-     * @param sender platform command sender instance
-     * @return instantiated object or null if it could not be instantiated
-     */
-    @Nullable T getInstance(String args, Class<?> clazz, @NotNull PlatformSender<?> sender);
+public class GameModeInputHandler implements InputHandler<GameMode> {
+
+    @Override
+    public @NotNull GameMode instantiateInstance(String input, Class<? extends GameMode> clazz, @Nullable PlatformSender<?> sender) {
+        return StringUtil.parseAsIntOrFallback(input, GameMode::getByValue, s -> EnumInputHandler.getEnumValue(s, GameMode.class));
+    }
+
+    @Override
+    public @NotNull Class<GameMode> getRelevantClass() {
+        return GameMode.class;
+    }
 }

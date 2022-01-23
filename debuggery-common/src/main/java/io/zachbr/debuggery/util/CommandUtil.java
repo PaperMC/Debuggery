@@ -22,7 +22,9 @@ import io.zachbr.debuggery.reflection.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class CommandUtil {
+public final class CommandUtil {
+
+    private static final String[] STRING_ARRAY = new String[0];
 
     /**
      * Gets all possible word completions based on the input
@@ -98,6 +100,6 @@ public class CommandUtil {
 
         return reflectionMap == null
                 ? Collections.emptyList()
-                : getCompletionsMatching(args.toArray(new String[0]), reflectionMap.getAllIds());
+                : getCompletionsMatching(args.toArray(STRING_ARRAY), reflectionMap.getAllIds());
     }
 }

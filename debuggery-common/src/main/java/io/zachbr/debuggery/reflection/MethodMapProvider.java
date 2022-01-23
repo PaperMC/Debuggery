@@ -35,7 +35,7 @@ public class MethodMapProvider {
     public @NotNull MethodMap getMethodMapFor(@NotNull Class<?> classIn) {
         Objects.requireNonNull(classIn);
 
-        var methodMap = cachedMethodMaps.get(classIn);
+        MethodMap methodMap = cachedMethodMaps.get(classIn);
         if (methodMap == null) {
             methodMap = new MethodMap(classIn);
             cachedMethodMaps.put(classIn, methodMap);

@@ -1,3 +1,7 @@
+plugins {
+    id("net.kyori.blossom")
+}
+
 configurations.register("testArchive") {
     extendsFrom(configurations.testCompileOnly.get())
 }
@@ -9,4 +13,8 @@ tasks.register<Jar>(name = "jarTest") {
 
 artifacts {
     add("testArchive", tasks.getByName("jarTest"))
+}
+
+blossom {
+    replaceToken("\$VERSION", project.version)
 }

@@ -43,27 +43,27 @@ class BootstrapHandlers {
         // Input Handlers
         //
 
-        PrimitivesHandler.addHandlers(registration); // Special cased for multi-registration
-        PrimitiveArrayHandler.addHandlers(registration); // multi-registration
+        PrimitivesInputHandler.addHandlers(registration); // Special cased for multi-registration
+        PrimitiveArrayInputHandler.addHandlers(registration); // multi-registration
 
         // order can matter here
-        registration.add(new StringHandler());
-        registration.add(new UUIDHandler());
+        registration.add(new StringInputHandler());
+        registration.add(new UUIDInputHandler());
         // register polymorphics last
-        registration.add(new CollectionHandler(typeHandler));
-        registration.add(new EnumHandler());
-        registration.add(new ObjectArrayHandler(typeHandler));
+        registration.add(new CollectionInputHandler(typeHandler));
+        registration.add(new EnumInputHandler());
+        registration.add(new ObjectArrayInputHandler(typeHandler));
 
         //
         // Output Handlers
         //
 
-        new OArrayHandler(registration, typeHandler); // Special cased for multi-registration
+        new OutputArrayHandler(registration, typeHandler); // Special cased for multi-registration
 
         // order can matter here
-        registration.add(new OCollectionHandler(typeHandler));
-        registration.add(new OMapHandler(typeHandler));
-        registration.add(new OStringHandler());
+        registration.add(new OutputCollectionHandler(typeHandler));
+        registration.add(new OutputMapHandler(typeHandler));
+        registration.add(new OutputStringHandler());
 
         for (Handler handler : registration) {
             if (!typeHandler.registerHandler(handler)) {

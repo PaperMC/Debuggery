@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class StringUtil {
+public final class StringUtil {
     /**
      * Parses an array of doubles from a given comma separated string
      *
@@ -30,7 +30,7 @@ public class StringUtil {
      * @param expectedSize count expected
      * @return new array of doubles
      */
-    public static @NotNull double[] parseDoublesFromString(String input, int expectedSize) {
+    public static double @NotNull [] parseDoublesFromString(String input, int expectedSize) {
         String[] split = input.split(",", expectedSize);
         if (split.length != expectedSize) {
             throw new IllegalArgumentException("Could not find exactly " + expectedSize + " comma separated values to parse!");
@@ -50,7 +50,7 @@ public class StringUtil {
      * It will first attempt to return a value from the primary parsing function. If the primary parsing function
      * returns a null value or the given value cannot be interpreted as an integer, this function will use the fallback
      * function which is required to return a non-nullable value.
-     *d
+     *
      * @param input          Input string to parse.
      * @param primaryParser  Function that returns a nullable value.
      * @param fallbackParser Function that returns a non-nullable value (or throws).

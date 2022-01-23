@@ -17,17 +17,19 @@
 
 package io.zachbr.debuggery.reflection.types.handlers.base;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Super interface for methods common to both Input and Output handlers
+ * Responsible for taking an instance of an object and converting it
+ * into a human readable string
  */
-public interface Handler<T> {
+public interface OutputHandler<T> extends Handler<T> {
 
     /**
-     * Gets the {@link Class} this IHandler is responsible for handling
+     * Formatted string containing information from the given object instance
      *
-     * @return relevant class
+     * @param object instance to get information from
+     * @return formatted string
      */
-    @NotNull Class<T> getRelevantClass();
+    @Nullable String getFormattedOutput(T object);
 }
