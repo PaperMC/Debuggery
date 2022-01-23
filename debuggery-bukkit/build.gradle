@@ -7,11 +7,10 @@ repositories {
 
 dependencies {
     implementation project(':debuggery-common')
-    implementation('com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT') {
+    implementation('com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT') {
         exclude group: 'junit' // provides conflicting APIs for our test implementations
         exclude group: 'com.google.code.findbugs' // provides conflicting nullability annotations
     }
 
     testImplementation project (path: ":debuggery-common", configuration: 'testArtifacts')
 }
-

@@ -4,19 +4,18 @@ buildscript {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
-        classpath 'gradle.plugin.net.minecrell:licenser:0.4.1'
+        //classpath 'gradle.plugin.net.minecrell:licenser:0.4.1'
     }
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'com.github.johnrengelman.shadow'
-    apply plugin: 'net.minecrell.licenser'
+    //apply plugin: 'net.minecrell.licenser'
 
     repositories {
         mavenCentral()
@@ -45,6 +44,7 @@ subprojects {
     targetCompatibility = 11
 
     processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         from(sourceSets.main.resources.srcDirs) {
             filter ReplaceTokens, tokens: [version: version]
         }
@@ -58,6 +58,7 @@ subprojects {
     build.dependsOn(shadowJar)
 
     shadowJar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         dependencies {
             include(dependency(':debuggery-common'))
         }
@@ -72,8 +73,8 @@ subprojects {
     }
 
     // updateLicenses | checkLicenses
-    license {
+    /*license {
         ext.name = 'Debuggery'
         header = rootProject.file('HEADER.txt')
-    }
+    }*/
 }
