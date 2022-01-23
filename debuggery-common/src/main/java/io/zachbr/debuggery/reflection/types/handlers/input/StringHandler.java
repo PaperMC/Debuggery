@@ -22,7 +22,7 @@ import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSende
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IStringHandler implements IHandler {
+public class StringHandler implements IHandler {
 
     @Override
     public @NotNull String instantiateInstance(String input, Class<?> clazz, @Nullable PlatformSender<?> sender) {

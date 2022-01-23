@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class IUUIDHandler extends PlatformSpecific<UUID> implements IHandler {
+public class UUIDHandler extends PlatformSpecific<UUID> implements IHandler {
 
     @Override
     public @NotNull UUID instantiateInstance(String input, Class<?> clazz, @Nullable PlatformSender<?> sender) {

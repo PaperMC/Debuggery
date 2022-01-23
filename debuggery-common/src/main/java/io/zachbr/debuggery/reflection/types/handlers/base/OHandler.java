@@ -31,5 +31,5 @@ public interface OHandler extends Handler {
      * @param object instance to get information from
      * @return formatted string
      */
-    @Nullable String getFormattedOutput(Object object);
+    @Nullable String getFormattedOutput(Object object); //TODO generics
 }

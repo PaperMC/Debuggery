@@ -21,11 +21,10 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.ProxyServer;
-import io.zachbr.debuggery.commands.*;
+import io.zachbr.debuggery.commands.ProxyPlayerCommand;
+import io.zachbr.debuggery.commands.ProxyServerCommand;
+import io.zachbr.debuggery.commands.ServerConnectionCommand;
 import io.zachbr.debuggery.commands.base.CommandBase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Plugin(id = "debuggery",
         name = "Debuggery",
@@ -35,7 +34,6 @@ import java.util.Map;
         url = "https://github.com/zachbr/Debuggery")
 public class DebuggeryVelocity extends DebuggeryBase {
     private final ProxyServer server;
-    private final Map<String, CommandBase> commands = new HashMap<>();
     private PluginContainer container;
 
     @Inject
@@ -72,7 +70,6 @@ public class DebuggeryVelocity extends DebuggeryBase {
     }
 
     private void registerCommand(CommandBase base) {
-        this.commands.put(base.getName(), base);
-        this.server.getCommandManager().register(base, base.getName());
+        this.server.getCommandManager().register(base.getName(), base);
     }
 }

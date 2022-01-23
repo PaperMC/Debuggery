@@ -17,30 +17,30 @@
 
 package io.zachbr.debuggery.commands.base;
 
-import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
 // todo - this should be made more abstract at some point and merged into -common, it's mostly a copy pasta of bukkit's for now
-public abstract class CommandBase implements Command {
-    private static final TextComponent PLAYER_USE_ONLY_MSG = TextComponent.of("This command can only be used by players!").color(TextColor.RED);
+public abstract class CommandBase implements SimpleCommand {
+    private static final Component PLAYER_USE_ONLY_MSG = Component.text("This command can only be used by players!").color(NamedTextColor.RED);
 
     private final String name;
     private final String permNode;
     private final boolean requiresPlayer;
     private final boolean shouldShowInHelp;
 
-    public CommandBase(String name, String permNode, boolean requiresPlayer) {
+    protected CommandBase(String name, String permNode, boolean requiresPlayer) {
         this(name, permNode, requiresPlayer, true);
     }
 
-    public CommandBase(String name, String permNode, boolean requiresPlayer, boolean shouldShowInHelp) {
+    protected CommandBase(String name, String permNode, boolean requiresPlayer, boolean shouldShowInHelp) {
         this.name = name;
         this.permNode = permNode;
         this.requiresPlayer = requiresPlayer;
@@ -48,23 +48,23 @@ public abstract class CommandBase implements Command {
     }
 
     @Override
-    public final void execute(CommandSource source, @NotNull String[] args) {
-        if (this.requiresPlayer && !(source instanceof Player)) {
-            source.sendMessage(PLAYER_USE_ONLY_MSG);
+    public void execute(final Invocation invocation) {
+        if (this.requiresPlayer && !(invocation.source() instanceof Player)) {
+            invocation.source().sendMessage(PLAYER_USE_ONLY_MSG);
             return;
         }
 
-        commandLogic(source, args);
+        commandLogic(invocation.source(), invocation.arguments());
     }
 
     @Override
-    public final List<String> suggest(CommandSource source, @NotNull String[] currentArgs) {
-        if (this.requiresPlayer && !(source instanceof Player)) {
-            source.sendMessage(PLAYER_USE_ONLY_MSG);
+    public List<String> suggest(final Invocation invocation) {
+        if (this.requiresPlayer && !(invocation.source() instanceof Player)) {
+            invocation.source().sendMessage(PLAYER_USE_ONLY_MSG);
             return Collections.emptyList();
         }
 
-        return tabCompleteLogic(source, currentArgs);
+        return tabCompleteLogic(invocation.source(), invocation.arguments());
     }
 
     /**
@@ -74,17 +74,19 @@ public abstract class CommandBase implements Command {
      * @param args   arguments for the given command
      */
     public final void showHelpText(CommandSource source, @NotNull String[] args) {
-        source.sendMessage(TextComponent.of("==== /" + this.getName() + " ===="));
+        source.sendMessage(Component.text("==== /" + this.name + " ===="));
         this.helpLogic(source, args);
     }
 
     protected abstract void commandLogic(@NotNull CommandSource source, @NotNull String[] args);
+
     protected abstract void helpLogic(@NotNull CommandSource source, @NotNull String[] args);
+
     protected abstract List<String> tabCompleteLogic(@NotNull CommandSource source, @NotNull String[] args);
 
     @Override
-    public boolean hasPermission(CommandSource source, @NotNull String[] args) {
-        return source.hasPermission(this.permNode);
+    public boolean hasPermission(final Invocation invocation) {
+        return invocation.source().hasPermission(this.permNode);
     }
 
     /**

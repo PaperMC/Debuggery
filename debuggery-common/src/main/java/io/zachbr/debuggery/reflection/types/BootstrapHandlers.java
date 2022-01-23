@@ -43,16 +43,16 @@ class BootstrapHandlers {
         // Input Handlers
         //
 
-        new IPrimitivesHandler(registration); // Special cased for multi-registration
-        new IPrimitiveArrayHandler(registration); // multi-registration
+        PrimitivesHandler.addHandlers(registration); // Special cased for multi-registration
+        PrimitiveArrayHandler.addHandlers(registration); // multi-registration
 
         // order can matter here
-        registration.add(new IStringHandler());
-        registration.add(new IUUIDHandler());
+        registration.add(new StringHandler());
+        registration.add(new UUIDHandler());
         // register polymorphics last
-        registration.add(new ICollectionHandler(typeHandler));
-        registration.add(new IEnumHandler());
-        registration.add(new IObjectArrayHandler(typeHandler));
+        registration.add(new CollectionHandler(typeHandler));
+        registration.add(new EnumHandler());
+        registration.add(new ObjectArrayHandler(typeHandler));
 
         //
         // Output Handlers

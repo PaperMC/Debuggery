@@ -22,8 +22,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import io.zachbr.debuggery.DebuggeryVelocity;
 import io.zachbr.debuggery.commands.base.CommandReflection;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
 public class ServerConnectionCommand extends CommandReflection {
@@ -37,6 +37,6 @@ public class ServerConnectionCommand extends CommandReflection {
         Player player = (Player) source;
         player.getCurrentServer().ifPresentOrElse(
                 it -> doReflectionLookups(source, args, it),
-                () -> source.sendMessage(TextComponent.of("Not connected to a server!").color(TextColor.RED)));
+                () -> source.sendMessage(Component.text("Not connected to a server!").color(NamedTextColor.RED)));
     }
 }

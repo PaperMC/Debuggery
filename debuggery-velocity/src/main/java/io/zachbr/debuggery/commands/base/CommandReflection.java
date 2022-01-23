@@ -25,18 +25,21 @@ import io.zachbr.debuggery.reflection.MethodMapProvider;
 import io.zachbr.debuggery.reflection.chain.ReflectionResult;
 import io.zachbr.debuggery.reflection.types.InputException;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
-import io.zachbr.debuggery.util.*;
-import net.kyori.text.TextComponent;
-import net.kyori.text.event.HoverEvent;
-import net.kyori.text.format.TextColor;
+import io.zachbr.debuggery.util.CommandUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 // todo - Really really refactor to -common, this was just a few changes
+
 /**
  * Base class for all commands that use reflection to dig into Velocity's API
  */
@@ -54,8 +57,8 @@ public abstract class CommandReflection extends CommandBase {
 
     @Override
     protected void helpLogic(@NotNull CommandSource sender, @NotNull String[] args) {
-        sender.sendMessage(TextComponent.of("Uses reflection to call API methods built into Bukkit."));
-        sender.sendMessage(TextComponent.of("Try using the tab completion to see all available subcommands."));
+        sender.sendMessage(Component.text("Uses reflection to call API methods built into Bukkit."));
+        sender.sendMessage(Component.text("Try using the tab completion to see all available subcommands."));
     }
 
     @Override
@@ -79,7 +82,7 @@ public abstract class CommandReflection extends CommandBase {
         if (args.length == 0) {
             String result = getOutputStringFor(instance);
             if (result != null) {
-                sender.sendMessage(TextComponent.of(result));
+                sender.sendMessage(Component.text(result));
             }
             return true;
         }
@@ -92,7 +95,7 @@ public abstract class CommandReflection extends CommandBase {
 
         final String inputMethod = args[0];
         if (!availableMethods.containsId(inputMethod)) {
-            sender.sendMessage(TextComponent.of("Unknown or unavailable method").color(TextColor.RED));
+            sender.sendMessage(Component.text("Unknown or unavailable method").color(NamedTextColor.RED));
             return true;
         }
 
@@ -128,7 +131,7 @@ public abstract class CommandReflection extends CommandBase {
         if (sender instanceof Player) {
             sendFancyChatException(sender, errorMessage, cause);
         } else {
-            sender.sendMessage(TextComponent.of(errorMessage).color(TextColor.RED));
+            sender.sendMessage(Component.text(errorMessage).color(NamedTextColor.RED));
         }
 
         cause.printStackTrace();
@@ -136,13 +139,13 @@ public abstract class CommandReflection extends CommandBase {
 
     private void notifySenderOfResultReason(CommandSource sender, ReflectionResult chainResult) {
         Objects.requireNonNull(chainResult.getReason());
-        sender.sendMessage(TextComponent.of(chainResult.getReason()));
+        sender.sendMessage(Component.text(chainResult.getReason()));
     }
 
     private void notifySenderOfSuccess(CommandSource sender, ReflectionResult chainResult) {
         String output = getOutputStringFor(chainResult.getEndingInstance());
         if (output != null) {
-            sender.sendMessage(TextComponent.of(output));
+            sender.sendMessage(Component.text(output));
         }
     }
 
@@ -171,11 +174,9 @@ public abstract class CommandReflection extends CommandBase {
         final StringWriter writer = new StringWriter();
         throwable.printStackTrace(new PrintWriter(writer));
 
-        TextComponent component = TextComponent.of(msg)
-                .color(TextColor.RED)
-                .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                        TextComponent.of(writer.toString().replaceAll("\t", "    ")
-                                .replaceAll("\r", ""))));
+        Component component = Component.text(msg)
+                .color(NamedTextColor.RED)
+                .hoverEvent(HoverEvent.showText(Component.text(writer.toString().replaceAll("\t", "    ").replaceAll("\r", ""))));
 
         source.sendMessage(component);
     }

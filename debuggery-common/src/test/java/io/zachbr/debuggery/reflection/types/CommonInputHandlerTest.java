@@ -21,7 +21,11 @@ import io.zachbr.debuggery.TestLoggerImpl;
 import io.zachbr.debuggery.reflection.types.implementations.AnEnum;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,9 +122,9 @@ public class CommonInputHandlerTest {
 
     @Test
     public void testCollection() throws InputException {
-        Class[] inputTypes = {List.class, Set.class, Collection.class, Queue.class, Vector.class};
+        Class[] inputTypes = {List.class, Set.class, Collection.class, Queue.class};
         String[] input = {"java.lang.String:Grass,Stone,Dirt", "java.lang.String:Wither,Zombie,Creeper", "java.lang.String:Nether,Ender",
-                "java.lang.String:Redwood,RED_MUSHROOM,dark_oak", "java.lang.String:Creative,Survival,Adventure"};
+                "java.lang.String:Redwood,RED_MUSHROOM,dark_oak"};
 
         Object[] output = typeHandler.instantiateTypes(inputTypes, Arrays.asList(input), null);
 
@@ -129,7 +133,6 @@ public class CommonInputHandlerTest {
         assertTrue(output[1] instanceof Set);
         assertTrue(output[2] instanceof Collection);
         assertTrue(output[3] instanceof Queue);
-        assertTrue(output[4] instanceof Vector);
 
         BiFunction<Collection, Object[], Boolean> testAllPresent = (collection, testers) -> {
             boolean passes = true;
@@ -151,7 +154,7 @@ public class CommonInputHandlerTest {
 
         // verify set contents
         Set set = (Set) output[1];
-        String[] expectedSkulls = { "Wither", "Zombie", "Creeper"};
+        String[] expectedSkulls = {"Wither", "Zombie", "Creeper"};
         assertSame(expectedSkulls.length, set.size());
         assertTrue(testAllPresent.apply(set, expectedSkulls));
 
@@ -166,11 +169,5 @@ public class CommonInputHandlerTest {
         String[] expectedClasses = {"Redwood", "RED_MUSHROOM", "dark_oak"};
         assertSame(expectedClasses.length, queue.size());
         assertTrue(testAllPresent.apply(queue, expectedClasses));
-
-        // verify vector contents
-        Vector vector = (Vector) output[4];
-        String[] expectedGameModes = {"Creative", "Survival", "Adventure"};
-        assertSame(expectedGameModes.length, vector.size());
-        assertTrue(testAllPresent.apply(vector, expectedGameModes));
     }
 }

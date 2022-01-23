@@ -34,20 +34,20 @@ public class OMapHandler implements OHandler {
     @Override
     public @Nullable String getFormattedOutput(Object object) {
         final Map<?,?> map = (Map<?,?>) object;
-        StringBuilder out = new StringBuilder().append("{");
+        StringBuilder out = new StringBuilder("{");
 
         for (var iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry<?,?> entry = iterator.next();
 
-            out.append("[").append(typeHandler.getOutputFor(entry.getKey())).append(", ");
-            out.append(typeHandler.getOutputFor(entry.getValue())).append("]");
+            out.append('[').append(typeHandler.getOutputFor(entry.getKey())).append(", ");
+            out.append(typeHandler.getOutputFor(entry.getValue())).append(']');
 
             if (iterator.hasNext()) {
-                out.append("\n");
+                out.append('\n');
             }
         }
 
-        return out.append("}").toString();
+        return out.append('}').toString();
     }
 
     @Override

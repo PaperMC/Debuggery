@@ -24,12 +24,20 @@ import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSende
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 
-public class ICollectionHandler implements IPolymorphicHandler {
+public class CollectionHandler implements IPolymorphicHandler {
     private final TypeHandler typeHandler;
 
-    public ICollectionHandler(TypeHandler handler) {
+    public CollectionHandler(TypeHandler handler) {
         this.typeHandler = handler;
     }
 
@@ -58,12 +66,10 @@ public class ICollectionHandler implements IPolymorphicHandler {
             instanceOut = new ArrayList<>();
         } else if (clazz == Queue.class) {
             instanceOut = new PriorityQueue<>();
-        } else if (clazz == Vector.class) {
-            instanceOut = new Vector<>();
         } else if (clazz == Collection.class) {
             instanceOut = new HashSet<>();
         } else {
-           throw new HandlerNotImplementedException(clazz);
+            throw new HandlerNotImplementedException(clazz);
         }
 
         Collections.addAll(instanceOut, instantiatedTypes);

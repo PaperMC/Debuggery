@@ -23,18 +23,28 @@ import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSende
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
-public class IPrimitivesHandler {
+public final class PrimitiveArrayHandler {
 
-    public IPrimitivesHandler(List<Handler> registration) {
+    public static void addHandlers(List<Handler> registration) {
         // loop through all supported classes and register them to the handler
-        Class<?>[] supportedClasses = {byte.class, short.class, int.class, long.class, float.class, double.class, boolean.class, char.class};
+        Class<?>[] supportedClasses = {byte[].class, short[].class, int[].class, long[].class, float[].class, double[].class, boolean[].class, char[].class};
         for (Class<?> clazz : supportedClasses) {
             IHandler handler = new IHandler() {
                 @Override
                 public @NotNull Object instantiateInstance(String input, Class<?> clazz, @Nullable PlatformSender<?> sender) {
-                    return getPrimitive(input, clazz);
+                    String[] elements = input.split(",");
+                    Class<?> arrayType = clazz.getComponentType();
+                    Object typedArray = Array.newInstance(arrayType, elements.length);
+
+                    for (int i = 0; i < elements.length; i++) {
+                        Object value = PrimitivesHandler.getPrimitive(elements[i], arrayType);
+                        Array.set(typedArray, i, value);
+                    }
+
+                    return typedArray;
                 }
 
                 @Override
@@ -45,31 +55,5 @@ public class IPrimitivesHandler {
 
             registration.add(handler);
         }
-    }
-
-    public static @NotNull Object getPrimitive(String input, Class<?> clazz) {
-        if (input == null) {
-            throw new NullPointerException("Cannot get any value from null input!");
-        }
-
-        if (clazz.equals(byte.class)) {
-            return Byte.parseByte(input);
-        } else if (clazz.equals(short.class)) {
-            return Short.parseShort(input);
-        } else if (clazz.equals(int.class)) {
-            return Integer.parseInt(input);
-        } else if (clazz.equals(long.class)) {
-            return Long.parseLong(input);
-        } else if (clazz.equals(float.class)) {
-            return Float.parseFloat(input);
-        } else if (clazz.equals(double.class)) {
-            return Double.parseDouble(input);
-        } else if (clazz.equals(boolean.class)) {
-            return Boolean.parseBoolean(input);
-        } else if (clazz.equals(char.class)) {
-            return input.charAt(0);
-        }
-
-        throw new AssertionError("Java added another primitive type!");
     }
 }

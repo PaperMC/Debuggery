@@ -19,7 +19,7 @@ package io.zachbr.debuggery.reflection.types.handlers.bukkit.input;
 
 import io.zachbr.debuggery.reflection.types.handlers.base.IHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
-import io.zachbr.debuggery.reflection.types.handlers.input.IEnumHandler;
+import io.zachbr.debuggery.reflection.types.handlers.input.EnumHandler;
 import io.zachbr.debuggery.util.StringUtil;
 import org.bukkit.Difficulty;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class IDifficultyHandler implements IHandler {
 
     @Override
     public @NotNull Difficulty instantiateInstance(String input, Class<?> clazz, PlatformSender<?> sender) {
-        return StringUtil.parseAsIntOrFallback(input, Difficulty::getByValue, s -> IEnumHandler.getEnumValue(s, Difficulty.class));
+        return StringUtil.parseAsIntOrFallback(input, Difficulty::getByValue, s -> EnumHandler.getEnumValue(s, Difficulty.class));
     }
 
     @Override

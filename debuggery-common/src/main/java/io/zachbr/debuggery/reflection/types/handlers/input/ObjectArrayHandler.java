@@ -26,10 +26,10 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class IObjectArrayHandler implements IPolymorphicHandler {
+public class ObjectArrayHandler implements IPolymorphicHandler {
     private final TypeHandler typeHander;
 
-    public IObjectArrayHandler(TypeHandler handler) {
+    public ObjectArrayHandler(TypeHandler handler) {
         this.typeHander = handler;
     }
 

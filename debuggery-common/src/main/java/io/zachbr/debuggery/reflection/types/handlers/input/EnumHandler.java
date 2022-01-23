@@ -22,7 +22,7 @@ import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSende
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IEnumHandler implements IPolymorphicHandler {
+public class EnumHandler implements IPolymorphicHandler {
 
     public static <T extends Enum<T>> @NotNull T getEnumValue(String input, Class<T> clazz) {
         return Enum.valueOf(clazz, input.toUpperCase());
