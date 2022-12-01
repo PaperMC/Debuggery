@@ -122,7 +122,6 @@ public abstract class CommandReflection extends CommandBase {
 
     private void notifySenderOfSuccess(CommandSender sender, ReflectionResult chainResult) {
         String output = getOutputStringFor(chainResult.getEndingInstance());
-        System.out.println(output + " " + chainResult.getEndingInstance() + " " + chainResult.getReason() + " " + chainResult.getType());
         if (output != null) {
             sender.sendMessage(output);
         }
