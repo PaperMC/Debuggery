@@ -21,6 +21,9 @@ commands:
   dentity:
     description: Returns entity info
     usage: /dentity
+  dentityselect:
+    description: Selects the target entity
+    usage: /dentityselect
   ditem:
     description: Returns item info
     usage: /ditem

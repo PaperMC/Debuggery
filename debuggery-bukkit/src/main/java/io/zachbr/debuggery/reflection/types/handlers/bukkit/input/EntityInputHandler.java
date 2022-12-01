@@ -19,21 +19,26 @@ package io.zachbr.debuggery.reflection.types.handlers.bukkit.input;
 
 import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
+import io.zachbr.debuggery.reflection.types.handlers.input.UUIDInputHandler;
 import io.zachbr.debuggery.util.PlatformUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public class EntityInputHandler implements InputHandler<Entity> {
+
+    private static final UUIDInputHandler UUID_INPUT_HANDLER = new UUIDInputHandler();
 
     static @NotNull Entity getEntity(String input, @Nullable PlatformSender<?> sender) {
         Entity target;
 
         // player specific commands to make things easier for them
-        if (sender != null && sender.getRawSender() instanceof Player) {
-            Player player = (Player) sender.getRawSender();
+        if (sender != null && sender.getRawSender() instanceof Player player) {
             if (input.equalsIgnoreCase("that")) {
                 target = PlatformUtil.getEntityPlayerLookingAt(player, 25, 1.5D);
 
@@ -45,6 +50,15 @@ public class EntityInputHandler implements InputHandler<Entity> {
             }
         }
 
+
+        try {
+            Entity possibleTarget = Bukkit.getEntity(UUID_INPUT_HANDLER.instantiateInstance(input, UUID.class, sender));
+            if (possibleTarget != null) {
+                return possibleTarget;
+            }
+        } catch (Exception ignored) {
+        }
+
         // otherwise fall back to just getting the closest entity to the given location
         Location loc = LocationInputHandler.getLocation(input, sender);
         Entity nearest = PlatformUtil.getEntityNearestTo(loc, 25, 1.5D);
@@ -52,7 +66,7 @@ public class EntityInputHandler implements InputHandler<Entity> {
         if (nearest != null) {
             return nearest;
         } else {
-          throw new NullPointerException("Cannot find any entities near you!");
+            throw new NullPointerException("Cannot find any entities near you!");
         }
     }
 

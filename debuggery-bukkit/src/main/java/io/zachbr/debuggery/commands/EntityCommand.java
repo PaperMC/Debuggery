@@ -20,7 +20,9 @@ package io.zachbr.debuggery.commands;
 import io.zachbr.debuggery.DebuggeryBukkit;
 import io.zachbr.debuggery.commands.base.CommandReflection;
 import io.zachbr.debuggery.util.PlatformUtil;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -34,10 +36,20 @@ public class EntityCommand extends CommandReflection {
     @Override
     protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
-        Entity entity = PlatformUtil.getEntityPlayerLookingAt(player, 25, 1.5D);
+        Entity entity = null;
+        if (this.debuggery.getTargetedEntity() != null) {
+            entity = Bukkit.getEntity(this.debuggery.getTargetedEntity());
+            if (entity == null) {
+                this.debuggery.setTargetedEntity(null);
+            }
+        }
 
         if (entity == null) {
-            sender.sendMessage(ChatColor.RED + "Couldn't detect the entity you were looking at!");
+            entity = PlatformUtil.getEntityPlayerLookingAt(player, 25, 1.5D);
+        }
+
+        if (entity == null) {
+            sender.sendMessage(Component.text("Couldn't detect the entity you were looking at!", NamedTextColor.RED));
             return true;
         }
 

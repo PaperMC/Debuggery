@@ -10,7 +10,7 @@ allprojects {
     version = "1.4.0-SNAPSHOT"
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -18,7 +18,7 @@ subprojects {
     tasks {
         withType<JavaCompile> {
             options.encoding = Charsets.UTF_8.name()
-            options.release.set(11)
+            options.release.set(17)
         }
         withType<Javadoc> {
             options.encoding = Charsets.UTF_8.name()

@@ -17,8 +17,8 @@
 
 package io.zachbr.debuggery.util;
 
-import net.md_5.bungee.api.chat.*;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,8 +40,8 @@ public class FancyExceptionWrapper {
      * @param throwable    throwable to format and display on hover
      */
     public static void sendFancyChatException(CommandSender sender, String errorMessage, Throwable throwable) {
-        BaseComponent fancyException = formatException(errorMessage, throwable);
-        sender.spigot().sendMessage(fancyException);
+        Component fancyException = formatException(errorMessage, throwable);
+        sender.sendMessage(fancyException);
     }
 
     /**
@@ -52,15 +52,13 @@ public class FancyExceptionWrapper {
      * @return BaseComponent ready to send
      */
     @NotNull
-    private static BaseComponent formatException(String errorMessage, Throwable throwable) {
+    private static Component formatException(String errorMessage, Throwable throwable) {
         final StringWriter writer = new StringWriter();
         throwable.printStackTrace(new PrintWriter(writer));
 
-        TextComponent component = new TextComponent(ChatColor.RED + errorMessage);
-        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[]{
-                new TextComponent(writer.toString().replaceAll("\t", "    ").replaceAll("\r", ""))
-        }));
-
-        return component;
+        return Component.text(errorMessage, NamedTextColor.RED)
+                .hoverEvent(
+                        Component.text(writer.toString().replaceAll("\t", "    ").replaceAll("\r", ""))
+                );
     }
 }

@@ -23,10 +23,14 @@ import io.zachbr.debuggery.reflection.types.handlers.bukkit.BukkitBootstrap;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class DebuggeryBukkit extends DebuggeryBase {
+
+    @Nullable
+    private UUID targetedEntity;
     private final DebuggeryJavaPlugin javaPlugin;
     private final Map<String, CommandBase> commands = new HashMap<>();
 
@@ -56,6 +60,7 @@ public class DebuggeryBukkit extends DebuggeryBase {
         this.registerCommand(new PlayerCommand(this));
         this.registerCommand(new ServerCommand(this));
         this.registerCommand(new WorldCommand(this));
+        this.registerCommand(new SelectEntityCommand(this));
 
         for (CommandBase c : commands.values()) {
             PluginCommand bukkitCmd = this.getJavaPlugin().getCommand(c.getName());
@@ -77,6 +82,15 @@ public class DebuggeryBukkit extends DebuggeryBase {
 
     public JavaPlugin getJavaPlugin() {
         return javaPlugin;
+    }
+
+    @Nullable
+    public UUID getTargetedEntity() {
+        return targetedEntity;
+    }
+
+    public void setTargetedEntity(@Nullable UUID targetedEntity) {
+        this.targetedEntity = targetedEntity;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class DebuggeryJavaPlugin extends JavaPlugin {
     private final DebuggeryBukkit main;
 
     public DebuggeryJavaPlugin() {
-        this.main = new DebuggeryBukkit(this, new BukkitLogger(this.getLogger()));
+        this.main = new DebuggeryBukkit(this, new BukkitLogger(this.getComponentLogger()));
     }
 
     @Override

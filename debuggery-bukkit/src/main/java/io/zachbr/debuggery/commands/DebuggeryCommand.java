@@ -20,12 +20,16 @@ package io.zachbr.debuggery.commands;
 import io.zachbr.debuggery.DebuggeryBukkit;
 import io.zachbr.debuggery.commands.base.CommandBase;
 import io.zachbr.debuggery.util.CommandUtil;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
+
+import static net.kyori.adventure.text.Component.text;
 
 public class DebuggeryCommand extends CommandBase {
     private final DebuggeryBukkit debuggery;
@@ -38,17 +42,17 @@ public class DebuggeryCommand extends CommandBase {
     @Override
     protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.GOLD + "=== Debuggery v" + debuggery.getJavaPlugin().getDescription().getVersion() + " ===");
-            sender.sendMessage("Debuggery is designed to expose API values at runtime.");
-            sender.sendMessage("To see what commands are available and any help associated with them, use tab completion on this command.");
-            sender.sendMessage("Source code can be found here: " + ChatColor.BLUE + debuggery.getJavaPlugin().getDescription().getWebsite());
+            sender.sendMessage(text("=== Debuggery v" + debuggery.getJavaPlugin().getDescription().getVersion() + " ===", NamedTextColor.GOLD));
+            sender.sendMessage(text("Debuggery is designed to expose API values at runtime."));
+            sender.sendMessage(text("To see what commands are available and any help associated with them, use tab completion on this command."));
+            sender.sendMessage(text("Source code can be found here: ").append(text(debuggery.getJavaPlugin().getDescription().getWebsite(), NamedTextColor.BLUE)));
             return true;
         }
 
         if (args.length == 1) {
             String arg = args[0].toLowerCase(Locale.ENGLISH);
             if (!debuggery.getAllCommands().containsKey(arg)) {
-                sender.sendMessage(ChatColor.RED + "Debuggery command not found");
+                sender.sendMessage(text("Debuggery command not found", NamedTextColor.RED));
                 return true;
             }
 
@@ -56,15 +60,15 @@ public class DebuggeryCommand extends CommandBase {
             return target.showHelpText(sender, args);
         }
 
-        sender.sendMessage(ChatColor.RED + "Too many arguments");
+        sender.sendMessage(text("Too many arguments", NamedTextColor.RED));
         return true;
     }
 
     @Override
     protected boolean helpLogic(CommandSender sender, String[] args) {
-        sender.sendMessage("Displays general information about the plugin.");
-        sender.sendMessage("Also shows more specific help for each command when entered");
-        sender.sendMessage("Try using tab completion to see all available subtopics.");
+        sender.sendMessage(text("Displays general information about the plugin."));
+        sender.sendMessage(text("Also shows more specific help for each command when entered"));
+        sender.sendMessage(text("Try using tab completion to see all available subtopics."));
         return true;
     }
 

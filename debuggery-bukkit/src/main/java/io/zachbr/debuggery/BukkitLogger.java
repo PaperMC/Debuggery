@@ -17,17 +17,19 @@
 
 package io.zachbr.debuggery;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class BukkitLogger implements Logger {
-    private final java.util.logging.Logger pluginLogger;
+    private final ComponentLogger pluginLogger;
     private final Set<CommandSender> debugListeners = new HashSet<>();
 
-    BukkitLogger(java.util.logging.Logger logger) {
+    BukkitLogger(ComponentLogger logger) {
         this.pluginLogger = logger;
     }
 
@@ -38,12 +40,12 @@ public class BukkitLogger implements Logger {
 
     @Override
     public void warn(String str) {
-        pluginLogger.warning(str);
+        pluginLogger.warn(str);
     }
 
     @Override
     public void err(String str) {
-        pluginLogger.severe(str);
+        pluginLogger.error(str);
     }
 
     @Override
@@ -52,7 +54,8 @@ public class BukkitLogger implements Logger {
             return;
         }
 
-        final String colorOut = ChatColor.GOLD + "[DEBUG] " + str;
+
+        final Component colorOut = Component.text( "[DEBUG] " + str, NamedTextColor.GOLD);
         pluginLogger.info(colorOut);
         for (CommandSender sender : debugListeners) {
             sender.sendMessage(colorOut);

@@ -124,6 +124,10 @@ class ReflectionChain {
                         "You provided extra args after a void return type!\n" + ReflectionUtil.getArgMismatchString(currentMethod));
                 break;
             }
+
+            if (currentMethod.getReturnType() == Void.TYPE && currentInstance == null) {
+                result = new ReflectionResult(ReflectionResult.Type.SUCCESS, Void.TYPE, "Method returned void.");
+            }
         }
 
         if (result == null) {

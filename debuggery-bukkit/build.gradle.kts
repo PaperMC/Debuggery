@@ -1,5 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow")
+    id("xyz.jpenilla.run-paper") version "1.0.6"
 }
 
 tasks {
@@ -17,11 +18,15 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+
+    runServer {
+        minecraftVersion("1.19.2")
+    }
 }
 
 dependencies {
     implementation(project(":debuggery-common"))
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
     testImplementation(project(path = ":debuggery-common", configuration = "testArchive"))
-    testImplementation("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
 }

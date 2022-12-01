@@ -18,38 +18,18 @@
 package io.zachbr.debuggery.util;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Contains platform specific utilities that I'd rather not
  * have stuffed in the main class.
  */
 public class PlatformUtil {
-    private static Boolean baseComponentApiPresent = null;
-
-    /**
-     * Checks if we are able to use our fancy chat exceptions
-     * Really we're checking for Spigot-API's BaseComponent API
-     *
-     * @return true if we can use our fancy chat exceptions
-     */
-    public static boolean canUseFancyChatExceptions() {
-        if (baseComponentApiPresent == null) {
-            try {
-                baseComponentApiPresent = Class.forName("net.md_5.bungee.api.chat.BaseComponent") != null;
-            } catch (ClassNotFoundException ignored) {
-                baseComponentApiPresent = false;
-            }
-        }
-
-        return baseComponentApiPresent;
-    }
 
     /**
      * Performs a raytrace to check which entity the player is probably looking at
@@ -60,31 +40,10 @@ public class PlatformUtil {
      * @return entity player is looking at, or null if we couldn't find one
      */
     public static @Nullable Entity getEntityPlayerLookingAt(Player player, int range, double tolerance) {
-        List<Entity> entities = player.getNearbyEntities(range, range, range);
+        Location eyeLocation = player.getEyeLocation();
+        RayTraceResult result = player.getWorld().rayTraceEntities(eyeLocation, eyeLocation.getDirection(), range, tolerance, (entity) -> entity != player);
 
-        for (Block block : player.getLineOfSight(null, range)) {
-            final Location location = block.getLocation();
-            for (Entity entity : entities) {
-                // X
-                if (!(Math.abs(entity.getLocation().getX() - location.getX()) < tolerance)) {
-                    continue;
-                }
-
-                // Y
-                if (!(Math.abs(entity.getLocation().getY() - location.getY()) < tolerance)) {
-                    continue;
-                }
-
-                // Z
-                if (!(Math.abs(entity.getLocation().getX() - location.getX()) < tolerance)) {
-                    continue;
-                }
-
-                return entity;
-            }
-        }
-
-        return null;
+        return result == null ? null : result.getHitEntity();
     }
 
     /**

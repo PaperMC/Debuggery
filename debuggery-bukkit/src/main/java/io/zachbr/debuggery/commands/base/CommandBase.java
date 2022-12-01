@@ -17,7 +17,8 @@
 
 package io.zachbr.debuggery.commands.base;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +30,8 @@ import java.util.List;
  * Class to handle all the stupid minutia involved with commands
  */
 public abstract class CommandBase implements CommandExecutor, TabCompleter {
-    private static final String NO_PERMS_MSG = ChatColor.RED + "You do not have permission to do that!";
-    private static final String PLAYER_USE_ONLY_MSG = ChatColor.RED + "This command can only be used by players!";
+    private static final Component NO_PERMS_MSG = Component.text("You do not have permission to do that!", NamedTextColor.RED) ;
+    private static final Component PLAYER_USE_ONLY_MSG = Component.text("This command can only be used by players!", NamedTextColor.RED);
 
     private final String name;
     private final String permission;
@@ -80,7 +81,11 @@ public abstract class CommandBase implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage("==== " + ChatColor.GOLD + "/" + this.getName() + ChatColor.RESET + " ====");
+        sender.sendMessage(
+                Component.text("==== ")
+                        .append(Component.text(this.getName(), NamedTextColor.GOLD))
+                        .append(Component.text(" ===="))
+        );
         return this.helpLogic(sender, args);
     }
 

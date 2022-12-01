@@ -23,20 +23,23 @@ import io.zachbr.debuggery.reflection.MethodMapProvider;
 import io.zachbr.debuggery.reflection.chain.ReflectionResult;
 import io.zachbr.debuggery.reflection.types.InputException;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
-import io.zachbr.debuggery.util.*;
-import org.apache.commons.lang.Validate;
-import org.bukkit.ChatColor;
+import io.zachbr.debuggery.util.CommandUtil;
+import io.zachbr.debuggery.util.FancyExceptionWrapper;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Base class for all commands that use reflection to dig into Bukkit's API
  */
 public abstract class CommandReflection extends CommandBase {
-    private final DebuggeryBukkit debuggery;
+    protected final DebuggeryBukkit debuggery;
     private final MethodMapProvider mapCache;
     private MethodMap availableMethods = MethodMap.EMPTY;
 
@@ -49,8 +52,8 @@ public abstract class CommandReflection extends CommandBase {
 
     @Override
     protected boolean helpLogic(CommandSender sender, String[] args) {
-        sender.sendMessage("Uses reflection to call API methods built into Bukkit.");
-        sender.sendMessage("Try using the tab completion to see all available subcommands.");
+        sender.sendMessage(Component.text("Uses reflection to call API methods built into Bukkit."));
+        sender.sendMessage(Component.text("Try using the tab completion to see all available subcommands."));
         return true;
     }
 
@@ -77,31 +80,24 @@ public abstract class CommandReflection extends CommandBase {
         // more than 0 args, start chains
 
         Class<?> activeClass = availableMethods.getMappedClass();
-        Validate.isTrue(activeClass.isInstance(instance), "Instance is of type: " + instance.getClass().getSimpleName() + "but was expecting: " + activeClass.getSimpleName());
+        if (!activeClass.isInstance(instance)) {
+            throw new IllegalArgumentException("Instance is of type: " + instance.getClass().getSimpleName() + "but was expecting: " + activeClass.getSimpleName());
+        }
         final String inputMethod = args[0];
 
         if (!availableMethods.containsId(inputMethod)) {
-            sender.sendMessage(ChatColor.RED + "Unknown or unavailable method");
+            sender.sendMessage(Component.text("Unknown or unavailable method", NamedTextColor.RED));
             return true;
         }
 
         PlatformSender<?> platformSender = new PlatformSender<>(sender);
         ReflectionResult chainResult = debuggery.runReflectionChain(args, instance, platformSender);
         switch (chainResult.getType()) {
-            case SUCCESS:
-                notifySenderOfSuccess(sender, chainResult);
-                break;
-            case INPUT_ERROR:
-            case UNHANDLED_EXCEPTION:
-                notifySenderOfException(sender, chainResult);
-                break;
-            case NULL_REFERENCE:
-            case UNKNOWN_REFERENCE:
-            case ARG_MISMATCH:
-                notifySenderOfResultReason(sender, chainResult);
-                break;
-            default:
-                throw new IllegalArgumentException("Unhandled switch case for result of type: " + chainResult.getType());
+            case SUCCESS -> notifySenderOfSuccess(sender, chainResult);
+            case INPUT_ERROR, UNHANDLED_EXCEPTION -> notifySenderOfException(sender, chainResult);
+            case NULL_REFERENCE, UNKNOWN_REFERENCE, ARG_MISMATCH -> notifySenderOfResultReason(sender, chainResult);
+            default ->
+                    throw new IllegalArgumentException("Unhandled switch case for result of type: " + chainResult.getType());
         }
 
         return true;
@@ -114,22 +110,19 @@ public abstract class CommandReflection extends CommandBase {
         String errorMessage = ex instanceof InputException ? "Exception deducing proper types from your input!" : "Exception invoking method - See console for more details!";
         Throwable cause = ex.getCause() == null ? ex : ex.getCause();
 
-        if (PlatformUtil.canUseFancyChatExceptions()) {
-            FancyExceptionWrapper.sendFancyChatException(sender, errorMessage, cause);
-        } else {
-            sender.sendMessage(ChatColor.RED + errorMessage);
-        }
+        FancyExceptionWrapper.sendFancyChatException(sender, errorMessage, cause);
 
         cause.printStackTrace();
     }
 
     private void notifySenderOfResultReason(CommandSender sender, ReflectionResult chainResult) {
         Objects.requireNonNull(chainResult.getReason());
-        sender.sendMessage(ChatColor.RED + chainResult.getReason());
+        sender.sendMessage(Component.text(chainResult.getReason(), NamedTextColor.RED));
     }
 
     private void notifySenderOfSuccess(CommandSender sender, ReflectionResult chainResult) {
         String output = getOutputStringFor(chainResult.getEndingInstance());
+        System.out.println(output + " " + chainResult.getEndingInstance() + " " + chainResult.getReason() + " " + chainResult.getType());
         if (output != null) {
             sender.sendMessage(output);
         }
