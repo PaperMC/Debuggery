@@ -138,6 +138,10 @@ public abstract class CommandReflection extends CommandBase {
         }
     }
 
+    protected void clearReflectionClass() {
+        this.availableMethods = MethodMap.EMPTY;
+    }
+
     /**
      * Convenience method to run objects past the TypeHandler
      *

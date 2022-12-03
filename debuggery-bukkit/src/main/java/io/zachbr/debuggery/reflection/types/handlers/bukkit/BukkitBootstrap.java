@@ -51,7 +51,6 @@ public class BukkitBootstrap {
         bukkitHandlers.add(new InventoryInputHandler());
         bukkitHandlers.add(new ItemStackInputHandler());
         bukkitHandlers.add(new LocationInputHandler());
-        bukkitHandlers.add(new MaterialDataInputHandler());
         bukkitHandlers.add(new MaterialInputHandler());
         bukkitHandlers.add(new NamespacedKeyInputHandler());
         bukkitHandlers.add(new PermissionInputHandler());

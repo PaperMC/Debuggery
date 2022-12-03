@@ -36,3 +36,9 @@ commands:
   dworld:
     description: Returns world info
     usage: /dworld
+  deventremove:
+    description: Removes event debugger
+    usage: /deventremove <*|class>
+  devent:
+    description: Adds a new event debugger
+    usage: /devent <event> <methods>

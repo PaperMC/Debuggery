@@ -27,6 +27,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class EntityCommand extends CommandReflection {
     public EntityCommand(DebuggeryBukkit debuggery) {
@@ -36,6 +39,30 @@ public class EntityCommand extends CommandReflection {
     @Override
     protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
+        Entity target = this.getTarget(player);
+        if (target == null) {
+            sender.sendMessage(Component.text("Couldn't detect the entity you were looking at!", NamedTextColor.RED));
+            return true;
+        }
+
+        return doReflectionLookups(sender, args, target);
+    }
+
+    @Override
+    public List<String> tabCompleteLogic(CommandSender sender, Command command, String alias, String[] args) {
+        Entity target = this.getTarget((Player) sender);
+        if (target == null) {
+            clearReflectionClass();
+            return List.of("NOT FOUND");
+        } else {
+            updateReflectionClass(target.getClass());
+        }
+
+        return super.tabCompleteLogic(sender, command, alias, args);
+    }
+
+    @Nullable
+    private Entity getTarget(Player player) {
         Entity entity = null;
         if (this.debuggery.getTargetedEntity() != null) {
             entity = Bukkit.getEntity(this.debuggery.getTargetedEntity());
@@ -47,13 +74,6 @@ public class EntityCommand extends CommandReflection {
         if (entity == null) {
             entity = PlatformUtil.getEntityPlayerLookingAt(player, 25, 1.5D);
         }
-
-        if (entity == null) {
-            sender.sendMessage(Component.text("Couldn't detect the entity you were looking at!", NamedTextColor.RED));
-            return true;
-        }
-
-        updateReflectionClass(entity.getClass());
-        return doReflectionLookups(sender, args, entity);
+        return entity;
     }
 }

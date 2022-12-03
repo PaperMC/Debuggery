@@ -17,7 +17,7 @@
 
 package io.zachbr.debuggery.reflection.types.handlers.bukkit.input;
 
-import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
+import io.zachbr.debuggery.reflection.types.handlers.base.InputPolymorphicHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
 import io.zachbr.debuggery.reflection.types.handlers.input.UUIDInputHandler;
 import io.zachbr.debuggery.util.PlatformUtil;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class EntityInputHandler implements InputHandler<Entity> {
+public class EntityInputHandler implements InputPolymorphicHandler<Entity> {
 
     private static final UUIDInputHandler UUID_INPUT_HANDLER = new UUIDInputHandler();
 
