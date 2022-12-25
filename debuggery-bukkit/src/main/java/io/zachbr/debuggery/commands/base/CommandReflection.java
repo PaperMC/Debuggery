@@ -31,14 +31,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Base class for all commands that use reflection to dig into Bukkit's API
  */
 public abstract class CommandReflection extends CommandBase {
+
+    // Splits by spaces unless in quotes: This[split]is[split]an[split]example ~ "This is"[split]an[split]example
+    private static final Pattern UNQUOTED_SPLIT = Pattern.compile(" +(?=(?:(?:[^\"]*\"){2})*[^\"]*$)");
+
     protected final DebuggeryBukkit debuggery;
     private final MethodMapProvider mapCache;
     private MethodMap availableMethods = MethodMap.EMPTY;
@@ -77,7 +83,10 @@ public abstract class CommandReflection extends CommandBase {
             return true;
         }
 
-        // more than 0 args, start chains
+        {
+            // Combine quoted elements
+            args = parse(String.join(" ", args));
+        }
 
         Class<?> activeClass = availableMethods.getMappedClass();
         if (!activeClass.isInstance(instance)) {
@@ -158,5 +167,30 @@ public abstract class CommandReflection extends CommandBase {
         MethodMap reflectionMap = this.availableMethods;
 
         return CommandUtil.getReflectiveCompletions(arguments, reflectionMap, mapCache);
+    }
+
+    private static String[] parse(String input) {
+        List<String> arguments = new ArrayList<>();
+        StringBuilder currentArgument = new StringBuilder();
+        boolean inQuote = false;
+
+        for (int i = 0; i < input.length(); i++) {
+            char currentChar = input.charAt(i);
+
+            if (currentChar == '"') {
+                inQuote = !inQuote;
+            } else if (currentChar == ' ' && !inQuote) {
+                arguments.add(currentArgument.toString());
+                currentArgument.setLength(0);
+            } else {
+                currentArgument.append(currentChar);
+            }
+        }
+
+        if (currentArgument.length() > 0) {
+            arguments.add(currentArgument.toString());
+        }
+
+        return arguments.toArray(new String[0]);
     }
 }
