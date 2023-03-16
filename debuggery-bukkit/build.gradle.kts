@@ -20,13 +20,13 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.19.3")
+        minecraftVersion("1.19.4")
     }
 }
 
 dependencies {
     implementation(project(":debuggery-common"))
-    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
     testImplementation(project(path = ":debuggery-common", configuration = "testArchive"))
-    testImplementation("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 }
