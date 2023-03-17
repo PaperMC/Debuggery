@@ -34,7 +34,7 @@ public final class CommandUtil {
      * @return List of possible completions based on the input
      */
     public static List<String> getCompletionsMatching(String[] input, Collection<String> completions) {
-        String latestArg = input[input.length - 1];
+        String latestArg = input.length == 0 ? "" : input[input.length - 1];
         List<String> matches = new ArrayList<>();
 
         if (!completions.isEmpty()) {

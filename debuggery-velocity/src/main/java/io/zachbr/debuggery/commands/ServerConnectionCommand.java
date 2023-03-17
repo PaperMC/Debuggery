@@ -37,6 +37,6 @@ public class ServerConnectionCommand extends CommandReflection {
         Player player = (Player) source;
         player.getCurrentServer().ifPresentOrElse(
                 it -> doReflectionLookups(source, args, it),
-                () -> source.sendMessage(Component.text("Not connected to a server!").color(NamedTextColor.RED)));
+                () -> source.sendMessage(Component.text("Not connected to a server!", NamedTextColor.RED)));
     }
 }

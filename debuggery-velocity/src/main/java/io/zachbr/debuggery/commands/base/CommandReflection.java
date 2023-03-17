@@ -102,20 +102,10 @@ public abstract class CommandReflection extends CommandBase {
         PlatformSender<?> platformSender = new PlatformSender<>(sender);
         ReflectionResult chainResult = debuggery.runReflectionChain(args, instance, platformSender);
         switch (chainResult.getType()) {
-            case SUCCESS:
-                notifySenderOfSuccess(sender, chainResult);
-                break;
-            case INPUT_ERROR:
-            case UNHANDLED_EXCEPTION:
-                notifySenderOfException(sender, chainResult);
-                break;
-            case NULL_REFERENCE:
-            case UNKNOWN_REFERENCE:
-            case ARG_MISMATCH:
-                notifySenderOfResultReason(sender, chainResult);
-                break;
-            default:
-                throw new IllegalArgumentException("Unhandled switch case for result of type: " + chainResult.getType());
+            case SUCCESS -> notifySenderOfSuccess(sender, chainResult);
+            case INPUT_ERROR, UNHANDLED_EXCEPTION -> notifySenderOfException(sender, chainResult);
+            case NULL_REFERENCE, UNKNOWN_REFERENCE, ARG_MISMATCH -> notifySenderOfResultReason(sender, chainResult);
+            default -> throw new IllegalArgumentException("Unhandled switch case for result of type: " + chainResult.getType());
         }
 
         return true;
