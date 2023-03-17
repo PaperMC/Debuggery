@@ -21,16 +21,12 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.List;
 
 // todo - this should be made more abstract at some point and merged into -common, it's mostly a copy pasta of bukkit's for now
 public abstract class CommandBase implements SimpleCommand {
-    private static final Component PLAYER_USE_ONLY_MSG = Component.text("This command can only be used by players!").color(NamedTextColor.RED);
-
     private final String name;
     private final String permNode;
     private final boolean requiresPlayer;
@@ -49,21 +45,11 @@ public abstract class CommandBase implements SimpleCommand {
 
     @Override
     public void execute(final Invocation invocation) {
-        if (this.requiresPlayer && !(invocation.source() instanceof Player)) {
-            invocation.source().sendMessage(PLAYER_USE_ONLY_MSG);
-            return;
-        }
-
         commandLogic(invocation.source(), invocation.arguments());
     }
 
     @Override
     public List<String> suggest(final Invocation invocation) {
-        if (this.requiresPlayer && !(invocation.source() instanceof Player)) {
-            invocation.source().sendMessage(PLAYER_USE_ONLY_MSG);
-            return Collections.emptyList();
-        }
-
         return tabCompleteLogic(invocation.source(), invocation.arguments());
     }
 
@@ -86,6 +72,9 @@ public abstract class CommandBase implements SimpleCommand {
 
     @Override
     public boolean hasPermission(final Invocation invocation) {
+        if (this.requiresPlayer && !(invocation.source() instanceof Player)) {
+            return false;
+        }
         return invocation.source().hasPermission(this.permNode);
     }
 
