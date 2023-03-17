@@ -1,7 +1,7 @@
 plugins {
     base
     `java-library`
-    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
+    id("com.github.johnrengelman.shadow") version "8.1.0" apply false
 }
 
 allprojects {
@@ -29,8 +29,8 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:23.0.0")
-        testImplementation("org.jetbrains:annotations:23.0.0")
+        compileOnly("org.jetbrains:annotations:24.0.1")
+        testImplementation("org.jetbrains:annotations:24.0.1")
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     }

@@ -7,7 +7,7 @@
 See the [**releases page**](https://github.com/kennytv/Debuggery/releases).
 
 ## Building
-Debuggery requires **Java 11** to build. I'd recommend using [Adoptium builds].
+Debuggery requires **Java 17** to build. I'd recommend using [Adoptium builds].
 
 Once cloned, use the gradle wrapper included in this repository to build a runnable jar.
 
