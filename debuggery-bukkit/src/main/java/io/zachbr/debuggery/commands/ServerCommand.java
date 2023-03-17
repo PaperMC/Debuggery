@@ -18,20 +18,19 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.BukkitCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
-public class ServerCommand extends CommandReflection {
+public class ServerCommand extends BukkitCommandReflection {
 
     public ServerCommand(DebuggeryBukkit debuggery) {
-        super("dserver", "debuggery.server", false, Server.class, debuggery);
+        super("dserver", "debuggery.server", false, true, Server.class, debuggery);
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
-        return doReflectionLookups(sender, args, Bukkit.getServer());
+    protected boolean commandLogic(Audience sender, String[] args) {
+        return getCommandReflection().doReflectionLookups(sender, args, Bukkit.getServer());
     }
 }

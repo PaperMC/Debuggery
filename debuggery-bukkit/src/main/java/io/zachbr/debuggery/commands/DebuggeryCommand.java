@@ -18,11 +18,10 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandBase;
+import io.zachbr.debuggery.commands.base.BukkitCommandBase;
 import io.zachbr.debuggery.util.CommandUtil;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.Component.text;
 
-public class DebuggeryCommand extends CommandBase {
+public class DebuggeryCommand extends BukkitCommandBase {
     private final DebuggeryBukkit debuggery;
 
     public DebuggeryCommand(DebuggeryBukkit debuggery) {
@@ -40,7 +39,7 @@ public class DebuggeryCommand extends CommandBase {
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    protected boolean commandLogic(Audience sender, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(text("=== Debuggery v" + debuggery.getJavaPlugin().getDescription().getVersion() + " ===", NamedTextColor.GOLD));
             sender.sendMessage(text("Debuggery is designed to expose API values at runtime."));
@@ -56,7 +55,7 @@ public class DebuggeryCommand extends CommandBase {
                 return true;
             }
 
-            CommandBase target = debuggery.getAllCommands().get(arg);
+            BukkitCommandBase target = debuggery.getAllCommands().get(arg);
             return target.showHelpText(sender, args);
         }
 
@@ -65,7 +64,7 @@ public class DebuggeryCommand extends CommandBase {
     }
 
     @Override
-    protected boolean helpLogic(CommandSender sender, String[] args) {
+    protected boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(text("Displays general information about the plugin."));
         sender.sendMessage(text("Also shows more specific help for each command when entered"));
         sender.sendMessage(text("Try using tab completion to see all available subtopics."));
@@ -73,14 +72,14 @@ public class DebuggeryCommand extends CommandBase {
     }
 
     @Override
-    protected List<String> tabCompleteLogic(CommandSender sender, Command command, String alias, String[] args) {
+    protected List<String> tabCompleteLogic(Audience sender, String[] args) {
         if (args.length > 1) {
             return Collections.emptyList();
         }
 
         List<String> commands = debuggery.getAllCommands().values().stream()
-                .filter(CommandBase::shouldShowInHelp)
-                .map(CommandBase::getName)
+                .filter(BukkitCommandBase::shouldShowInHelp)
+                .map(BukkitCommandBase::getName)
                 .collect(Collectors.toList());
 
         return CommandUtil.getCompletionsMatching(args, commands);

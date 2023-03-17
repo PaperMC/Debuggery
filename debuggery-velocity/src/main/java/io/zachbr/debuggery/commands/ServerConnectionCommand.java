@@ -17,26 +17,27 @@
 
 package io.zachbr.debuggery.commands;
 
-import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import io.zachbr.debuggery.DebuggeryVelocity;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.VelocityCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
-public class ServerConnectionCommand extends CommandReflection {
+public class ServerConnectionCommand extends VelocityCommandReflection {
 
     public ServerConnectionCommand(DebuggeryVelocity plugin) {
         super("vconnection", "debuggery.vconnection", true, ServerConnection.class, plugin);
     }
 
     @Override
-    protected void commandLogic(@NotNull CommandSource source, @NotNull String[] args) {
+    protected boolean commandLogic(@NotNull Audience source, @NotNull String[] args) {
         Player player = (Player) source;
         player.getCurrentServer().ifPresentOrElse(
-                it -> doReflectionLookups(source, args, it),
+                it -> commandReflection().doReflectionLookups(source, args, it),
                 () -> source.sendMessage(Component.text("Not connected to a server!", NamedTextColor.RED)));
+        return true;
     }
 }

@@ -23,7 +23,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import io.zachbr.debuggery.commands.ProxyPlayerCommand;
 import io.zachbr.debuggery.commands.ProxyServerCommand;
 import io.zachbr.debuggery.commands.ServerConnectionCommand;
-import io.zachbr.debuggery.commands.base.CommandBase;
+import io.zachbr.debuggery.commands.base.VelocityCommandBase;
 
 @Plugin(id = "debuggery",
         name = "Debuggery",
@@ -63,7 +63,7 @@ public class DebuggeryVelocity extends DebuggeryBase {
         return this.server;
     }
 
-    private void registerCommand(CommandBase base) {
+    private void registerCommand(VelocityCommandBase base) {
         this.server.getCommandManager().register(base.getName(), base);
     }
 }

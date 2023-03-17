@@ -2,6 +2,11 @@ plugins {
     id("net.kyori.blossom")
 }
 
+dependencies {
+    compileOnly("net.kyori:adventure-api:4.13.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.13.0")
+}
+
 configurations.register("testArchive") {
     extendsFrom(configurations.testCompileOnly.get())
 }

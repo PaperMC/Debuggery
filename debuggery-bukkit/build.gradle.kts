@@ -4,7 +4,7 @@ plugins {
 }
 
 tasks {
-    withType<ProcessResources> {
+    processResources {
         filesMatching("plugin.yml") {
             expand("version" to project.version)
         }

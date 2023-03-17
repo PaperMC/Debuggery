@@ -23,7 +23,7 @@ subprojects {
         withType<Javadoc> {
             options.encoding = Charsets.UTF_8.name()
         }
-        withType<ProcessResources> {
+        processResources {
             filteringCharset = Charsets.UTF_8.name()
         }
     }

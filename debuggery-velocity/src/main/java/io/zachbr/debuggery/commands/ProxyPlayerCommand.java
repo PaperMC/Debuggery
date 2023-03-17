@@ -17,20 +17,21 @@
 
 package io.zachbr.debuggery.commands;
 
-import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import io.zachbr.debuggery.DebuggeryVelocity;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.VelocityCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
 
-public class ProxyPlayerCommand extends CommandReflection {
+public class ProxyPlayerCommand extends VelocityCommandReflection {
 
     public ProxyPlayerCommand(DebuggeryVelocity plugin) {
         super("vplayer", "debuggery.vplayer", true, Player.class, plugin);
     }
 
     @Override
-    protected void commandLogic(@NotNull CommandSource source, @NotNull String[] args) {
-        doReflectionLookups(source, args, source);
+    protected boolean commandLogic(@NotNull Audience source, @NotNull String[] args) {
+        commandReflection().doReflectionLookups(source, args, source);
+        return true;
     }
 }

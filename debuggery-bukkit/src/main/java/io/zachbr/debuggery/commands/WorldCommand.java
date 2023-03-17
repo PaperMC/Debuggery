@@ -18,22 +18,21 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.BukkitCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class WorldCommand extends CommandReflection {
+public class WorldCommand extends BukkitCommandReflection {
 
     public WorldCommand(DebuggeryBukkit debuggery) {
-        super("dworld", "debuggery.world", true, World.class, debuggery);
+        super("dworld", "debuggery.world", true, true, World.class, debuggery);
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    protected boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
 
-        return doReflectionLookups(sender, args, player.getWorld());
+        return getCommandReflection().doReflectionLookups(sender, args, player.getWorld());
     }
 }

@@ -1,5 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow")
+    id("xyz.jpenilla.run-velocity") version "2.0.0"
 }
 
 tasks {
@@ -15,6 +16,6 @@ tasks {
 
 dependencies {
     implementation(project(":debuggery-common"))
-    compileOnly("com.velocitypowered:velocity-api:3.1.0")
-    annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
+    compileOnly("com.velocitypowered:velocity-api:3.2.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:3.2.0-SNAPSHOT")
 }

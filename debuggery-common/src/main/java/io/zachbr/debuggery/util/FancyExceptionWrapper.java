@@ -17,9 +17,9 @@
 
 package io.zachbr.debuggery.util;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
@@ -39,7 +39,7 @@ public class FancyExceptionWrapper {
      * @param errorMessage message displayed in chat
      * @param throwable    throwable to format and display on hover
      */
-    public static void sendFancyChatException(CommandSender sender, String errorMessage, Throwable throwable) {
+    public static void sendFancyChatException(Audience sender, String errorMessage, Throwable throwable) {
         Component fancyException = formatException(errorMessage, throwable);
         sender.sendMessage(fancyException);
     }

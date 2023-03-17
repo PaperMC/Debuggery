@@ -18,7 +18,7 @@
 package io.zachbr.debuggery;
 
 import io.zachbr.debuggery.commands.*;
-import io.zachbr.debuggery.commands.base.CommandBase;
+import io.zachbr.debuggery.commands.base.BukkitCommandBase;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.BukkitBootstrap;
 import io.zachbr.debuggery.util.EventDebugger;
 import org.bukkit.Bukkit;
@@ -34,7 +34,7 @@ public class DebuggeryBukkit extends DebuggeryBase {
     @Nullable
     private UUID targetedEntity;
     private final DebuggeryJavaPlugin javaPlugin;
-    private final Map<String, CommandBase> commands = new HashMap<>();
+    private final Map<String, BukkitCommandBase> commands = new HashMap<>();
 
     DebuggeryBukkit(DebuggeryJavaPlugin plugin, Logger logger) {
         super(logger);
@@ -67,7 +67,7 @@ public class DebuggeryBukkit extends DebuggeryBase {
         this.registerCommand(new EventCommand(this));
         this.registerCommand(new EventRemoveCommand(this));
 
-        for (CommandBase c : commands.values()) {
+        for (BukkitCommandBase c : commands.values()) {
             PluginCommand bukkitCmd = this.getJavaPlugin().getCommand(c.getName());
             if (bukkitCmd == null) {
                 throw new IllegalStateException("Unable to register " + c.getName() + ". Command not registered in plugin.yml?");
@@ -77,11 +77,11 @@ public class DebuggeryBukkit extends DebuggeryBase {
         }
     }
 
-    private void registerCommand(final CommandBase command) {
+    private void registerCommand(final BukkitCommandBase command) {
         this.commands.put(command.getName(), command);
     }
 
-    public Map<String, CommandBase> getAllCommands() {
+    public Map<String, BukkitCommandBase> getAllCommands() {
         return Collections.unmodifiableMap(commands);
     }
 

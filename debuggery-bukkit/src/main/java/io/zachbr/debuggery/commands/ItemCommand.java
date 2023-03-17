@@ -18,23 +18,22 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandReflection;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import io.zachbr.debuggery.commands.base.BukkitCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemCommand extends CommandReflection {
+public class ItemCommand extends BukkitCommandReflection {
 
     public ItemCommand(DebuggeryBukkit debuggery) {
-        super("ditem", "debuggery.item", true, ItemStack.class, debuggery);
+        super("ditem", "debuggery.item", true, true, ItemStack.class, debuggery);
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    protected boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
         ItemStack itemStack = player.getInventory().getItemInMainHand();
 
-        return doReflectionLookups(sender, args, itemStack);
+        return getCommandReflection().doReflectionLookups(sender, args, itemStack);
     }
 }
