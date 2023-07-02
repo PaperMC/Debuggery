@@ -58,6 +58,7 @@ public class BukkitBootstrap {
         bukkitHandlers.add(new PotionEffectInputHandler());
         bukkitHandlers.add(new PotionEffectTypeInputHandler());
         bukkitHandlers.add(new VectorInputHandler());
+        bukkitHandlers.add(new ComponentInputHandler());
         // register polymorphics last
         bukkitHandlers.add(new BlockDataInputHandler());
 
@@ -76,6 +77,7 @@ public class BukkitBootstrap {
         bukkitHandlers.add(new OfflinePlayerOutputHandler());
         bukkitHandlers.add(new PermissionAttachmentInfoOutputHandler());
         bukkitHandlers.add(new WorldBorderOutputHandler());
+        bukkitHandlers.add(new ComponentOutputHandler());
 
         //
         // Register
