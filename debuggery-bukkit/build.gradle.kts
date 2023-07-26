@@ -1,6 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow")
-    id("xyz.jpenilla.run-paper") version "2.0.1"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 tasks {
