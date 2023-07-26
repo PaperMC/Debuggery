@@ -7,7 +7,7 @@ plugins {
 allprojects {
     apply(plugin = "java")
     group = "io.papermc.debuggery"
-    version = "1.5.1"
+    version = "1.5.2-SNAPSHOT"
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
