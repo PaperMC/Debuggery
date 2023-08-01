@@ -39,14 +39,14 @@ public class DebugCommand extends BukkitCommandBase {
     private final Set<Audience> debugListeners;
 
     public DebugCommand(DebuggeryBukkit debuggery) {
-        super("ddebug", "debuggery.debug", false, false);
+        super("ddebug", "debuggery.debug", false, false, debuggery.getJavaPlugin());
 
         this.plugin = debuggery;
         this.debugListeners = ((BukkitLogger) debuggery.getLogger()).getDebugListeners();
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         // no debug mode, no debug command
         if (!DebuggeryBukkit.isDebugMode()) {
             sender.sendMessage(text("Debuggery Debug Mode is not enabled!", NamedTextColor.RED));
@@ -130,13 +130,13 @@ public class DebugCommand extends BukkitCommandBase {
     }
 
     @Override
-    protected boolean helpLogic(Audience sender, String[] args) {
+    public boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(text("Exposes the internal systems state of the Debuggery plugin"));
         return true;
     }
 
     @Override
-    protected List<String> tabCompleteLogic(Audience sender, String[] args) {
+    public List<String> tabCompleteLogic(Audience sender, String[] args) {
         return switch (args.length) {
             case 1 -> List.of("subscribe", "unsubscribe", "info");
             case 2 -> switch (args[0].toLowerCase()) {

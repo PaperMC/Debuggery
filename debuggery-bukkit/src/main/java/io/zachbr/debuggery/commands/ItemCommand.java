@@ -30,7 +30,7 @@ public class ItemCommand extends BukkitCommandReflection {
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
         ItemStack itemStack = player.getInventory().getItemInMainHand();
 

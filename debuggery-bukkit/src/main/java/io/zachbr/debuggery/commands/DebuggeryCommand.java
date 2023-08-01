@@ -34,17 +34,17 @@ public class DebuggeryCommand extends BukkitCommandBase {
     private final DebuggeryBukkit debuggery;
 
     public DebuggeryCommand(DebuggeryBukkit debuggery) {
-        super("debuggery", "debuggery.debuggery", false, false);
+        super("debuggery", "debuggery.debuggery", false, false, debuggery.getJavaPlugin());
         this.debuggery = debuggery;
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(text("=== Debuggery v" + debuggery.getJavaPlugin().getDescription().getVersion() + " ===", NamedTextColor.GOLD));
+            sender.sendMessage(text("=== Debuggery v" + debuggery.getJavaPlugin().getPluginMeta().getVersion() + " ===", NamedTextColor.GOLD));
             sender.sendMessage(text("Debuggery is designed to expose API values at runtime."));
             sender.sendMessage(text("To see what commands are available and any help associated with them, use tab completion on this command."));
-            sender.sendMessage(text("Source code can be found here: ").append(text(debuggery.getJavaPlugin().getDescription().getWebsite(), NamedTextColor.BLUE)));
+            sender.sendMessage(text("Source code can be found here: ").append(text(debuggery.getJavaPlugin().getPluginMeta().getWebsite(), NamedTextColor.BLUE)));
             return true;
         }
 
@@ -64,7 +64,7 @@ public class DebuggeryCommand extends BukkitCommandBase {
     }
 
     @Override
-    protected boolean helpLogic(Audience sender, String[] args) {
+    public boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(text("Displays general information about the plugin."));
         sender.sendMessage(text("Also shows more specific help for each command when entered"));
         sender.sendMessage(text("Try using tab completion to see all available subtopics."));
@@ -72,7 +72,7 @@ public class DebuggeryCommand extends BukkitCommandBase {
     }
 
     @Override
-    protected List<String> tabCompleteLogic(Audience sender, String[] args) {
+    public List<String> tabCompleteLogic(Audience sender, String[] args) {
         if (args.length > 1) {
             return Collections.emptyList();
         }

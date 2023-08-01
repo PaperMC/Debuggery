@@ -14,12 +14,12 @@ public abstract class BukkitCommandReflection extends BukkitCommandBase {
     private final CommandReflection commandReflection;
 
     protected BukkitCommandReflection(String name, String permission, boolean requiresPlayer, boolean shouldShowInHelp, Class<?> clazz, DebuggeryBukkit plugin) {
-        super(name, permission, requiresPlayer, shouldShowInHelp);
+        super(name, permission, requiresPlayer, shouldShowInHelp, plugin.getJavaPlugin());
         this.commandReflection = new CommandReflection(clazz, plugin);
     }
 
     @Override
-    protected boolean helpLogic(Audience sender, String[] args) {
+    public boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(Component.text("Uses reflection to call API methods built into Bukkit."));
         sender.sendMessage(Component.text("Try using the tab completion to see all available subcommands."));
         return true;

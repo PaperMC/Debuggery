@@ -1,0 +1,7 @@
+name: Debuggery
+main: io.zachbr.debuggery.DebuggeryJavaPlugin
+version: ${version}
+api-version: '1.19'
+authors: [Z750, kennytv, Owen1212055]
+website: https://github.com/PaperMC/Debuggery
+description: A small plugin designed to expose API values at runtime.

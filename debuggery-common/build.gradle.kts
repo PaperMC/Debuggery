@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    compileOnly("net.kyori:adventure-api:4.13.0")
-    compileOnly("net.kyori:adventure-text-minimessage:4.13.0")
+    compileOnly("net.kyori:adventure-api:4.14.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.14.0")
 }
 
 configurations.register("testArchive") {

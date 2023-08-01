@@ -30,7 +30,7 @@ public class BlockCommand extends BukkitCommandReflection {
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
         Block block = player.getTargetBlock(null, 50);
 

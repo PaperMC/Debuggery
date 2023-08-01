@@ -34,12 +34,12 @@ public class SelectEntityCommand extends BukkitCommandBase {
     private final DebuggeryBukkit debuggery;
 
     public SelectEntityCommand(DebuggeryBukkit debuggery) {
-        super("dentityselect", "debuggery.entity.select", true, true);
+        super("dentityselect", "debuggery.entity.select", true, true, debuggery.getJavaPlugin());
         this.debuggery = debuggery;
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         if (args.length > 0 && args[0].equals("unselect")) {
             this.debuggery.setTargetedEntity(null);
             sender.sendMessage(Component.text("Unselected entity!", NamedTextColor.GREEN));
@@ -68,13 +68,13 @@ public class SelectEntityCommand extends BukkitCommandBase {
     }
 
     @Override
-    protected boolean helpLogic(Audience sender, String[] args) {
+    public boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(Component.text("Look at an entity to select that entity for further /dentity actions."));
         return true;
     }
 
     @Override
-    protected List<String> tabCompleteLogic(Audience sender, String[] args) {
+    public List<String> tabCompleteLogic(Audience sender, String[] args) {
         return List.of("unselect");
     }
 }

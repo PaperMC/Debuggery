@@ -38,7 +38,7 @@ public class EventCommand extends BukkitCommandReflection {
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         if (args.length == 0) {
             return true;
         }

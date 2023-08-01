@@ -26,10 +26,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public abstract class VelocityCommandBase extends CommandBase implements SimpleCommand {
+public abstract class VelocityCommandBase implements CommandBase, SimpleCommand {
+    private final String name;
+    private final String permission;
+    private final boolean requiresPlayer;
 
     protected VelocityCommandBase(String name, String permNode, boolean requiresPlayer) {
-        super(name, permNode, requiresPlayer, true);
+        this.name = name;
+        this.permission = permNode;
+        this.requiresPlayer = requiresPlayer;
     }
 
     @Override
@@ -43,7 +48,7 @@ public abstract class VelocityCommandBase extends CommandBase implements SimpleC
     }
 
     @Override
-    protected boolean helpLogic(Audience source, @NotNull String[] args) {
+    public boolean helpLogic(Audience source, @NotNull String[] args) {
         source.sendMessage(Component.text("==== /" + this.getName() + " ===="));
         return true;
     }
@@ -54,5 +59,25 @@ public abstract class VelocityCommandBase extends CommandBase implements SimpleC
             return false;
         }
         return invocation.source().hasPermission(this.getPermission());
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String getPermission() {
+        return this.permission;
+    }
+
+    @Override
+    public boolean isRequiresPlayer() {
+        return this.requiresPlayer;
+    }
+
+    @Override
+    public boolean shouldShowInHelp() {
+        return true;
     }
 }

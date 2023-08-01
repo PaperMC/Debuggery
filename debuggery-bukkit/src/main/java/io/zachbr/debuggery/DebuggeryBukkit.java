@@ -22,7 +22,6 @@ import io.zachbr.debuggery.commands.base.BukkitCommandBase;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.BukkitBootstrap;
 import io.zachbr.debuggery.util.EventDebugger;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,12 +67,7 @@ public class DebuggeryBukkit extends DebuggeryBase {
         this.registerCommand(new EventRemoveCommand(this));
 
         for (BukkitCommandBase c : commands.values()) {
-            PluginCommand bukkitCmd = this.getJavaPlugin().getCommand(c.getName());
-            if (bukkitCmd == null) {
-                throw new IllegalStateException("Unable to register " + c.getName() + ". Command not registered in plugin.yml?");
-            }
-
-            bukkitCmd.setExecutor(c);
+            this.getJavaPlugin().getServer().getCommandMap().register(c.getName(), c);
         }
     }
 
@@ -104,7 +98,7 @@ public class DebuggeryBukkit extends DebuggeryBase {
 
     @Override
     String getPluginVersion() {
-        return javaPlugin.getDescription().getVersion();
+        return javaPlugin.getPluginMeta().getVersion();
     }
 
     @Override

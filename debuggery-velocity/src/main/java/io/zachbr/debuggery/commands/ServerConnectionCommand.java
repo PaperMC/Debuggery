@@ -26,14 +26,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
-public class ServerConnectionCommand extends VelocityCommandReflection {
+public final class ServerConnectionCommand extends VelocityCommandReflection {
 
     public ServerConnectionCommand(DebuggeryVelocity plugin) {
         super("vconnection", "debuggery.vconnection", true, ServerConnection.class, plugin);
     }
 
     @Override
-    protected boolean commandLogic(@NotNull Audience source, @NotNull String[] args) {
+    public boolean commandLogic(@NotNull Audience source, @NotNull String[] args) {
         Player player = (Player) source;
         player.getCurrentServer().ifPresentOrElse(
                 it -> commandReflection().doReflectionLookups(source, args, it),

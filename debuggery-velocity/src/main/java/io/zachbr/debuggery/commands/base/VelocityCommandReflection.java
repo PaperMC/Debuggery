@@ -18,7 +18,7 @@ public abstract class VelocityCommandReflection extends VelocityCommandBase {
     }
 
     @Override
-    protected boolean helpLogic(@NotNull Audience sender, @NotNull String[] args) {
+    public boolean helpLogic(@NotNull Audience sender, @NotNull String[] args) {
         super.helpLogic(sender, args);
         sender.sendMessage(Component.text("Uses reflection to call API methods built into Velocity."));
         sender.sendMessage(Component.text("Try using the tab completion to see all available subcommands."));

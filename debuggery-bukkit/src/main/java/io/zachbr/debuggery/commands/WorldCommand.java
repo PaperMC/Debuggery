@@ -30,8 +30,8 @@ public class WorldCommand extends BukkitCommandReflection {
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
-        Player player = (Player) sender;
+    public boolean commandLogic(Audience sender, String[] args) {
+        final Player player = (Player) sender;
 
         return getCommandReflection().doReflectionLookups(sender, args, player.getWorld());
     }

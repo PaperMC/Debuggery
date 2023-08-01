@@ -30,7 +30,7 @@ public class ServerCommand extends BukkitCommandReflection {
     }
 
     @Override
-    protected boolean commandLogic(Audience sender, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         return getCommandReflection().doReflectionLookups(sender, args, Bukkit.getServer());
     }
 }
