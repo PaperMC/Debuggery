@@ -13,13 +13,13 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        id("net.kyori.blossom") version "1.2.0"
-        id("com.github.johnrengelman.shadow") version "8.1.0"
+        id("net.kyori.blossom") version "1.3.1"
+        id("com.github.johnrengelman.shadow") version "8.1.1"
     }
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.6.0"
 }
 
 rootProject.name = "debuggery"

@@ -1,13 +1,13 @@
 plugins {
     base
     `java-library`
-    id("com.github.johnrengelman.shadow") version "8.1.0" apply false
+    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
 }
 
 allprojects {
     apply(plugin = "java")
     group = "io.papermc.debuggery"
-    version = "1.5.0-SNAPSHOT"
+    version = "1.5.2-SNAPSHOT"
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
