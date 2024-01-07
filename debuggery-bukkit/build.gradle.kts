@@ -4,7 +4,7 @@ plugins {
 }
 
 tasks {
-    withType<ProcessResources> {
+    processResources {
         filesMatching("plugin.yml") {
             expand("version" to project.version)
         }
@@ -20,13 +20,13 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.20.1")
     }
 }
 
 dependencies {
     implementation(project(":debuggery-common"))
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     testImplementation(project(path = ":debuggery-common", configuration = "testArchive"))
-    testImplementation("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 }

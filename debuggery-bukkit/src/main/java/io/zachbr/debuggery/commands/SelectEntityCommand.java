@@ -18,32 +18,28 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandBase;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.BukkitCommandBase;
 import io.zachbr.debuggery.util.PlatformUtil;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-import static net.kyori.adventure.text.Component.text;
-
-public class SelectEntityCommand extends CommandBase {
+public class SelectEntityCommand extends BukkitCommandBase {
 
     private final DebuggeryBukkit debuggery;
 
     public SelectEntityCommand(DebuggeryBukkit debuggery) {
-        super("dentityselect", "debuggery.entity.select", true);
+        super("dentityselect", "debuggery.entity.select", true, true, debuggery.getJavaPlugin());
         this.debuggery = debuggery;
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         if (args.length > 0 && args[0].equals("unselect")) {
             this.debuggery.setTargetedEntity(null);
             sender.sendMessage(Component.text("Unselected entity!", NamedTextColor.GREEN));
@@ -72,13 +68,13 @@ public class SelectEntityCommand extends CommandBase {
     }
 
     @Override
-    protected boolean helpLogic(CommandSender sender, String[] args) {
+    public boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(Component.text("Look at an entity to select that entity for further /dentity actions."));
         return true;
     }
 
     @Override
-    protected List<String> tabCompleteLogic(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> tabCompleteLogic(Audience sender, String[] args) {
         return List.of("unselect");
     }
 }

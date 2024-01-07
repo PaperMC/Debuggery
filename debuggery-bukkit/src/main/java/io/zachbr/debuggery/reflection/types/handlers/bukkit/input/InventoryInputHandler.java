@@ -29,29 +29,25 @@ import org.jetbrains.annotations.Nullable;
 public class InventoryInputHandler implements InputHandler<Inventory> {
     @Override
     public @NotNull Inventory instantiateInstance(String input, Class<? extends Inventory> clazz, @Nullable PlatformSender<?> sender) throws Exception {
-        if (sender == null || !(sender.getRawSender() instanceof Player)) {
+        if (sender == null || !(sender.getRawSender() instanceof Player player)) {
             throw new UnsupportedOperationException("Inventory input handler is only supported when used by a player!");
         }
 
-        Player player = (Player) sender.getRawSender();
-        switch (input.toLowerCase()) {
-            case "player":
-                return player.getInventory();
-            case "ender":
-                return player.getEnderChest();
-            case "new":
-                return Bukkit.createInventory(player, 27);
-            case "block":
-                Block block = player.getTargetBlock(25);
+        return switch (input.toLowerCase()) {
+            case "player" -> player.getInventory();
+            case "ender" -> player.getEnderChest();
+            case "new" -> Bukkit.createInventory(player, 27);
+            case "block" -> {
+                Block block = player.getTargetBlockExact(25);
                 BlockState state = block != null ? block.getState() : null;
                 if (state instanceof Container) {
-                    return ((Container) block.getState(false)).getInventory();
+                    yield ((Container) block.getState(false)).getInventory();
                 }
-
                 throw new IllegalArgumentException("Block does not exist or is not a container type!");
-        }
-
-        throw new IllegalArgumentException("Unknown inventory argument, allowed: \"player\", \"ender\", \"new\", \"block\"");
+            }
+            default ->
+                    throw new IllegalArgumentException("Unknown inventory argument, allowed: \"player\", \"ender\", \"new\", \"block\"");
+        };
     }
 
     @Override

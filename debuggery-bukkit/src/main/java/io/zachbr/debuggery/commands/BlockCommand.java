@@ -18,23 +18,22 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.BukkitCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class BlockCommand extends CommandReflection {
+public class BlockCommand extends BukkitCommandReflection {
 
     public BlockCommand(DebuggeryBukkit debuggery) {
-        super("dblock", "debuggery.block", true, Block.class, debuggery);
+        super("dblock", "debuggery.block", true, true, Block.class, debuggery);
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
         Block block = player.getTargetBlock(null, 50);
 
-        return doReflectionLookups(sender, args, block);
+        return getCommandReflection().doReflectionLookups(sender, args, block);
     }
 }

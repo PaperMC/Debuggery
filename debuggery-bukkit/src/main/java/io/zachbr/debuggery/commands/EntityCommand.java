@@ -18,26 +18,27 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.BukkitCommandReflection;
 import io.zachbr.debuggery.util.PlatformUtil;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EntityCommand extends CommandReflection {
+public class EntityCommand extends BukkitCommandReflection {
+    private final DebuggeryBukkit plugin;
     public EntityCommand(DebuggeryBukkit debuggery) {
-        super("dentity", "debuggery.entity", true, Entity.class, debuggery);
+        super("dentity", "debuggery.entity", true, true, Entity.class, debuggery);
+        this.plugin = debuggery;
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
         Entity target = this.getTarget(player);
         if (target == null) {
@@ -45,29 +46,29 @@ public class EntityCommand extends CommandReflection {
             return true;
         }
 
-        return doReflectionLookups(sender, args, target);
+        return getCommandReflection().doReflectionLookups(sender, args, target);
     }
 
     @Override
-    public List<String> tabCompleteLogic(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> tabCompleteLogic(Audience sender, String[] args) {
         Entity target = this.getTarget((Player) sender);
         if (target == null) {
-            clearReflectionClass();
+            getCommandReflection().clearReflectionClass();
             return List.of("NOT FOUND");
         } else {
-            updateReflectionClass(target.getClass());
+            getCommandReflection().updateReflectionClass(target.getClass());
         }
 
-        return super.tabCompleteLogic(sender, command, alias, args);
+        return super.tabCompleteLogic(sender, args);
     }
 
     @Nullable
     private Entity getTarget(Player player) {
         Entity entity = null;
-        if (this.debuggery.getTargetedEntity() != null) {
-            entity = Bukkit.getEntity(this.debuggery.getTargetedEntity());
+        if (this.plugin.getTargetedEntity() != null) {
+            entity = Bukkit.getEntity(this.plugin.getTargetedEntity());
             if (entity == null) {
-                this.debuggery.setTargetedEntity(null);
+                this.plugin.setTargetedEntity(null);
             }
         }
 

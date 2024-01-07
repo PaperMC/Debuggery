@@ -18,22 +18,21 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandReflection;
+import io.zachbr.debuggery.commands.base.BukkitCommandReflection;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Chunk;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ChunkCommand extends CommandReflection {
+public class ChunkCommand extends BukkitCommandReflection {
 
     public ChunkCommand(DebuggeryBukkit debuggery) {
-        super("dchunk", "debuggery.chunk", true, Chunk.class, debuggery);
+        super("dchunk", "debuggery.chunk", true, true, Chunk.class, debuggery);
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         Player player = (Player) sender;
 
-        return doReflectionLookups(sender, args, player.getLocation().getChunk());
+        return getCommandReflection().doReflectionLookups(sender, args, player.getLocation().getChunk());
     }
 }

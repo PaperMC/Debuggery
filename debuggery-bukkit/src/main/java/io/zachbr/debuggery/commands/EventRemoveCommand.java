@@ -18,26 +18,25 @@
 package io.zachbr.debuggery.commands;
 
 import io.zachbr.debuggery.DebuggeryBukkit;
-import io.zachbr.debuggery.commands.base.CommandBase;
+import io.zachbr.debuggery.commands.base.BukkitCommandBase;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventRemoveCommand extends CommandBase {
+public class EventRemoveCommand extends BukkitCommandBase {
 
     private final DebuggeryBukkit debuggery;
 
     public EventRemoveCommand(DebuggeryBukkit debuggery) {
-        super("deventremove", "debuggery.devent.remove", true);
+        super("deventremove", "debuggery.devent.remove", true, true, debuggery.getJavaPlugin());
         this.debuggery = debuggery;
     }
 
     @Override
-    protected boolean commandLogic(CommandSender sender, Command command, String label, String[] args) {
+    public boolean commandLogic(Audience sender, String[] args) {
         if (args.length > 0 && args[0].equals("*")) {
             this.debuggery.getEventDebugger().clearAll();
             sender.sendMessage(Component.text("Cleared all event debuggers!", NamedTextColor.GREEN));
@@ -59,13 +58,13 @@ public class EventRemoveCommand extends CommandBase {
     }
 
     @Override
-    protected boolean helpLogic(CommandSender sender, String[] args) {
+    public boolean helpLogic(Audience sender, String[] args) {
         sender.sendMessage(Component.text("Clears the event debugger for the provided event."));
         return true;
     }
 
     @Override
-    protected List<String> tabCompleteLogic(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> tabCompleteLogic(Audience sender, String[] args) {
         List<String> names = new ArrayList<>();
         this.debuggery.getEventDebugger().getAll().forEach((clazz) -> names.add(clazz.getName()));
         names.add("*");

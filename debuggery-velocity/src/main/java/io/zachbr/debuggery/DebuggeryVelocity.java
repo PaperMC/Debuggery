@@ -18,12 +18,13 @@
 package io.zachbr.debuggery;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import io.zachbr.debuggery.commands.ProxyPlayerCommand;
 import io.zachbr.debuggery.commands.ProxyServerCommand;
 import io.zachbr.debuggery.commands.ServerConnectionCommand;
-import io.zachbr.debuggery.commands.base.CommandBase;
+import io.zachbr.debuggery.commands.base.VelocityCommandBase;
 
 @Plugin(id = "debuggery",
         name = "Debuggery",
@@ -31,7 +32,7 @@ import io.zachbr.debuggery.commands.base.CommandBase;
         description = "A small plugin designed to expose API values at runtime.",
         authors = {"Z750", "kennytv"},
         url = "https://github.com/PaperMC/Debuggery")
-public class DebuggeryVelocity extends DebuggeryBase {
+public final class DebuggeryVelocity extends DebuggeryBase {
     private final ProxyServer server;
 
     @Inject
@@ -63,7 +64,11 @@ public class DebuggeryVelocity extends DebuggeryBase {
         return this.server;
     }
 
-    private void registerCommand(CommandBase base) {
-        this.server.getCommandManager().register(base.getName(), base);
+    private void registerCommand(VelocityCommandBase base) {
+        final CommandMeta commandMeta = this.server.getCommandManager()
+                .metaBuilder(base.getName())
+                .plugin(this)
+                .build();
+        this.server.getCommandManager().register(commandMeta, base);
     }
 }
