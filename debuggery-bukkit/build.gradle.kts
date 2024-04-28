@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow")
+    id("io.github.goooler.shadow")
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
