@@ -36,7 +36,7 @@ public class ReflectionUtilTest {
         List<String> out = ReflectionUtil.getArgsForMethod(inputStr, testClass1234);
 
         assertEquals(1, out.size());
-        assertEquals("1", out.get(0));
+        assertEquals("1", out.getFirst());
 
         // Given a method that requires multiple params, but not provided enough, ensure all are passed through
         inputStr = Arrays.asList("1", "2", "3");

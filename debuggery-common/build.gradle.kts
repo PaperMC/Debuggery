@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    compileOnly("net.kyori:adventure-api:4.14.0")
-    compileOnly("net.kyori:adventure-text-minimessage:4.14.0")
+    compileOnly("net.kyori:adventure-api:4.16.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.16.0")
 }
 
 configurations.register("testArchive") {
@@ -20,6 +20,12 @@ artifacts {
     add("testArchive", tasks.getByName("jarTest"))
 }
 
-blossom {
-    replaceToken("\$VERSION", project.version)
+sourceSets {
+    main {
+        blossom {
+            resources {
+                property("\$VERSION", project.version.toString())
+            }
+        }
+    }
 }

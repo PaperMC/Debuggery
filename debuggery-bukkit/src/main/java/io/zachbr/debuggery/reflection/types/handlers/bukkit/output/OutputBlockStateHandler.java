@@ -28,7 +28,7 @@ public class OutputBlockStateHandler implements OutputHandler {
     public @Nullable String getFormattedOutput(Object object) {
         final BlockState blockState = (BlockState) object;
 
-        return "[" + blockState.getData() + ", " +
+        return "[" + blockState.getBlockData() + ", " +
                 "blockData=" + blockState.getBlockData().getAsString() + ", " +
                 "light=" + blockState.getLightLevel() + ", " +
                 blockState.getLocation() + "]";
