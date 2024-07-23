@@ -22,8 +22,10 @@ import io.zachbr.debuggery.commands.base.BukkitCommandBase;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.BukkitBootstrap;
 import io.zachbr.debuggery.util.EventDebugger;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
+import org.reflections.Reflections;
 
 import java.util.*;
 
@@ -34,11 +36,13 @@ public class DebuggeryBukkit extends DebuggeryBase {
     private UUID targetedEntity;
     private final DebuggeryJavaPlugin javaPlugin;
     private final Map<String, BukkitCommandBase> commands = new HashMap<>();
+    private final List<String> events;
 
     DebuggeryBukkit(DebuggeryJavaPlugin plugin, Logger logger) {
         super(logger);
         this.javaPlugin = plugin;
         this.eventDebugger = new EventDebugger(this);
+        events = new Reflections().getSubTypesOf(Event.class).stream().map(Class::getCanonicalName).toList();
     }
 
     void onEnable() {
@@ -108,5 +112,9 @@ public class DebuggeryBukkit extends DebuggeryBase {
 
     String getPlatformVersion() {
         return Bukkit.getVersion();
+    }
+
+    public List<String> getEvents() {
+        return events;
     }
 }

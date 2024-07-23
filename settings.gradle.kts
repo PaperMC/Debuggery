@@ -13,7 +13,7 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        id("net.kyori.blossom") version "1.3.1"
+        id("net.kyori.blossom") version "2.1.0"
         id("io.github.goooler.shadow") version "8.1.7"
     }
 }

@@ -70,6 +70,8 @@ public class EventCommand extends BukkitCommandReflection {
     public List<String> tabCompleteLogic(Audience sender, String[] args) {
         if (args.length == 0) {
             return List.of();
+        } else if (args.length == 1) {
+            return plugin.getEvents().stream().filter(s -> s.contains(args[0])).toList();
         }
         try {
             Class<?> event = Class.forName(args[0], true, this.getClass().getClassLoader());

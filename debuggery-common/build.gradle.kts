@@ -20,6 +20,12 @@ artifacts {
     add("testArchive", tasks.getByName("jarTest"))
 }
 
-blossom {
-    replaceToken("\$VERSION", project.version)
+sourceSets {
+    main {
+        blossom {
+            resources {
+                property("version", project.version.toString())
+            }
+        }
+    }
 }
