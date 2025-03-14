@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("xyz.jpenilla.run-velocity") version "2.1.0"
 }
 

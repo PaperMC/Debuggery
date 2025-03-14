@@ -14,12 +14,12 @@ pluginManagement {
     }
     plugins {
         id("net.kyori.blossom") version "1.3.1"
-        id("io.github.goooler.shadow") version "8.1.7"
+        id("com.gradleup.shadow") version "8.3.6"
     }
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.6.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 }
 
 rootProject.name = "debuggery"
