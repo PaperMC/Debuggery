@@ -24,13 +24,31 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class EventCommand extends BukkitCommandReflection {
+    private static final MethodHandle EVENT_TYPES_HANDLE;
     private final DebuggeryBukkit plugin;
 
+    static {
+        MethodHandle handle = null;
+
+        try {
+            final Field eventTypesField = HandlerList.class.getDeclaredField("EVENT_TYPES");
+            eventTypesField.setAccessible(true);
+            handle = MethodHandles.lookup().unreflectGetter(eventTypesField);
+        } catch (final ReflectiveOperationException ignored) {}
+
+        EVENT_TYPES_HANDLE = handle;
+    }
 
     public EventCommand(DebuggeryBukkit debuggery) {
         super("devent", "debuggery.devent", true, true, Entity.class, debuggery);
@@ -68,8 +86,8 @@ public class EventCommand extends BukkitCommandReflection {
 
     @Override
     public List<String> tabCompleteLogic(Audience sender, String[] args) {
-        if (args.length == 0) {
-            return List.of();
+        if (args.length == 0 || args.length == 1) {
+            return knownEventClasses().stream().filter(className -> args.length == 0 || className.toLowerCase(Locale.ROOT).contains(args[0].toLowerCase(Locale.ROOT))).toList();
         }
         try {
             Class<?> event = Class.forName(args[0], true, this.getClass().getClassLoader());
@@ -84,5 +102,17 @@ public class EventCommand extends BukkitCommandReflection {
         }
 
         return super.tabCompleteLogic(sender, trimmed);
+    }
+
+    private Set<String> knownEventClasses() {
+        if (EVENT_TYPES_HANDLE == null) {
+            return Set.of();
+        }
+
+        try {
+            return (Set<String>) EVENT_TYPES_HANDLE.invokeExact();
+        } catch (Throwable e) {
+            return Set.of();
+        }
     }
 }
