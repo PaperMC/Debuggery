@@ -39,9 +39,9 @@ public class PlayerInputHandler implements InputHandler<Player> {
         }
 
         // shortcut getting themselves if possible
-        if (target == null && sender != null && sender.getRawSender() instanceof Player) {
+        if (target == null && sender != null && sender.getRawSender() instanceof Player playerSender) {
             if (input.equals("me")) {
-                target = (Player) sender;
+                target = playerSender;
             }
         }
 
