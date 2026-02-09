@@ -60,6 +60,7 @@ public class BukkitBootstrap {
         bukkitHandlers.add(new PotionEffectTypeInputHandler());
         bukkitHandlers.add(new VectorInputHandler());
         bukkitHandlers.add(new ComponentInputHandler());
+        bukkitHandlers.add(new CommandSenderInputHandler());
         // register polymorphics last
         bukkitHandlers.add(new BlockDataInputHandler());
 
