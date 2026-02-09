@@ -1,13 +1,11 @@
 plugins {
     base
     `java-library`
-    id("com.gradleup.shadow") version "8.3.6" apply false
+    id("com.gradleup.shadow") apply false
 }
 
 allprojects {
     apply(plugin = "java")
-    group = "io.papermc.debuggery"
-    version = "1.5.2-SNAPSHOT"
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -26,12 +24,18 @@ subprojects {
         processResources {
             filteringCharset = Charsets.UTF_8.name()
         }
+        test {
+            useJUnitPlatform()
+        }
     }
 
     dependencies {
         compileOnly("org.jetbrains:annotations:24.0.1")
         testImplementation("org.jetbrains:annotations:24.0.1")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+
+        testImplementation(platform("org.junit:junit-bom:6.0.2"))
+        testImplementation("org.junit.jupiter:junit-jupiter-api")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 }

@@ -35,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -115,6 +116,7 @@ public class BukkitInputHandlerTest {
 
     @SuppressWarnings("deprecation")
     @Test
+    @Disabled(value = "No handler for MaterialData exists anymore")
     public void testMaterialData() throws InputException {
         Class[] inputTypes = {MaterialData.class};
         String[] input = {"diamond_shovel:24"};
