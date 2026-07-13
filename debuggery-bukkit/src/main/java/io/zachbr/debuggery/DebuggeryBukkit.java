@@ -67,7 +67,7 @@ public class DebuggeryBukkit extends DebuggeryBase {
         this.registerCommand(new EventRemoveCommand(this));
 
         for (BukkitCommandBase c : commands.values()) {
-            this.getJavaPlugin().getServer().getCommandMap().register(c.getName(), c);
+            this.getJavaPlugin().getServer().getCommandMap().register(javaPlugin.getName(), c);
         }
     }
 
