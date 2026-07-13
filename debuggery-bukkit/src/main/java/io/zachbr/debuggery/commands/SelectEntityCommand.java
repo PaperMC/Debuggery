@@ -25,7 +25,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -55,13 +54,7 @@ public class SelectEntityCommand extends BukkitCommandBase {
             this.debuggery.setTargetedEntity(target.getUniqueId());
             sender.sendMessage(Component.text("Selected entity!", NamedTextColor.GREEN));
             target.setGlowing(true);
-            new BukkitRunnable(){
-
-                @Override
-                public void run() {
-                    target.setGlowing(false);
-                }
-            }.runTaskLater(this.debuggery.getJavaPlugin(), 20);
+            target.getScheduler().runDelayed(this.debuggery.getJavaPlugin(), task -> target.setGlowing(false), null, 20L);
         }
 
         return true;

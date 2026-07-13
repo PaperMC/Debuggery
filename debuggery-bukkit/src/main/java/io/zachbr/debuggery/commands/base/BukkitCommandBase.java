@@ -18,6 +18,7 @@
 package io.zachbr.debuggery.commands.base;
 
 import io.zachbr.debuggery.commands.CommandBase;
+import io.zachbr.debuggery.util.StringUtil;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -61,6 +62,11 @@ public abstract class BukkitCommandBase extends Command implements CommandBase, 
             return true;
         }
 
+        if (args.length > 0 && args[0].equalsIgnoreCase("#global")) {
+            plugin.getServer().getGlobalRegionScheduler().execute(plugin, () -> execute(sender, commandLabel, StringUtil.remArgs(args, 1)));
+            return true;
+        }
+
         return this.commandLogic(sender, args);
     }
 
@@ -87,6 +93,10 @@ public abstract class BukkitCommandBase extends Command implements CommandBase, 
         if (this.isRequiresPlayer() && !(sender instanceof Player)) {
             sender.sendMessage(PLAYER_USE_ONLY_MSG);
             return Collections.emptyList();
+        }
+
+        if (args.length > 0 && args[0].equalsIgnoreCase("#global")) {
+            args = StringUtil.remArgs(args, 1);
         }
 
         return this.tabCompleteLogic(sender, args);

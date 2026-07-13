@@ -70,4 +70,12 @@ public final class StringUtil {
 
         return fallbackParser.apply(input);
     }
+
+    public static String[] remArgs(final String[] args, int count) {
+        final int newLength = Math.max(args.length - count, 0);
+        final String[] newArgs = new String[newLength];
+        System.arraycopy(args, count, newArgs, 0, newLength);
+
+        return newArgs;
+    }
 }
