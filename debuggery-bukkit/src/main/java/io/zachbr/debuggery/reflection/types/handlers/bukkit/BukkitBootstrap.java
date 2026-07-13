@@ -61,6 +61,7 @@ public class BukkitBootstrap {
         bukkitHandlers.add(new VectorInputHandler());
         bukkitHandlers.add(new ComponentInputHandler());
         bukkitHandlers.add(new CommandSenderInputHandler());
+        bukkitHandlers.add(new BlockInputHandler());
         // register polymorphics last
         bukkitHandlers.add(new BlockDataInputHandler());
 
