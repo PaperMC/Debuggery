@@ -1,13 +1,11 @@
 plugins {
     id("com.gradleup.shadow")
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 tasks {
     processResources {
-        filesMatching("plugin.yml") {
-            expand("version" to project.version)
-        }
+        expand("version" to project.version)
     }
 
     val shadowJar = named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
@@ -20,7 +18,7 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.20.1")
+        minecraftVersion("26.2")
     }
 }
 
@@ -29,4 +27,12 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     testImplementation(project(path = ":debuggery-common", configuration = "testArchive"))
     testImplementation("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+}
+
+tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {
+    javaLauncher = javaToolchains.launcherFor {
+        vendor = JvmVendorSpec.JETBRAINS
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    jvmArgs("-XX:+AllowEnhancedClassRedefinition")
 }
