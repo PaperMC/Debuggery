@@ -8,7 +8,7 @@ allprojects {
     apply(plugin = "java")
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
@@ -16,7 +16,7 @@ subprojects {
     tasks {
         withType<JavaCompile> {
             options.encoding = Charsets.UTF_8.name()
-            options.release.set(17)
+            options.release.set(25)
         }
         withType<Javadoc> {
             options.encoding = Charsets.UTF_8.name()

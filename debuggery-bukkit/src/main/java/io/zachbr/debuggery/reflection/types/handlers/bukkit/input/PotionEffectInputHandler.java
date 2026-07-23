@@ -19,6 +19,8 @@ package io.zachbr.debuggery.reflection.types.handlers.bukkit.input;
 
 import io.zachbr.debuggery.reflection.types.handlers.base.InputHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSender;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +32,9 @@ public class PotionEffectInputHandler implements InputHandler<PotionEffect> {
     public @NotNull PotionEffect instantiateInstance(String input, Class<? extends PotionEffect> clazz, @Nullable PlatformSender<?> sender) throws Exception {
         String[] values = input.split(",");
 
-        PotionEffectType type = PotionEffectTypeInputHandler.getPotionEffectType(values[0]);
+        PotionEffectType type = Registry.MOB_EFFECT.get(NamespacedKey.fromString(values[0]));
         int duration = 120 * 20; // value is in ticks
-        int amplifier = 1;
+        int amplifier = 0;
 
         if (values.length >= 2) {
             duration = Integer.parseInt(values[1]);

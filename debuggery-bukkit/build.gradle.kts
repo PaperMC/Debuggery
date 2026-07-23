@@ -24,9 +24,9 @@ tasks {
 
 dependencies {
     implementation(project(":debuggery-common"))
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     testImplementation(project(path = ":debuggery-common", configuration = "testArchive"))
-    testImplementation("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper:paper-api:26.2.build.+")
 }
 
 tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {

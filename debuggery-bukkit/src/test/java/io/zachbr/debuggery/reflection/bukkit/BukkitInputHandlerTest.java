@@ -30,7 +30,6 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
@@ -73,6 +72,7 @@ public class BukkitInputHandlerTest {
     }
 
     @Test
+    @Disabled("Cannot test input type that relies on registry data")
     public void testArrayItemStacks() throws InputException {
         Class[] inputTypes = {ItemStack[].class};
         String[] input = {"diamond,sand,diamond_sword"};
@@ -96,6 +96,7 @@ public class BukkitInputHandlerTest {
     }
 
     @Test
+    @Disabled("Cannot test input type that relies on registry data")
     public void testItemStack() throws InputException {
         Class[] inputTypes = {ItemStack.class};
         String[] input = {"diamond"};
@@ -112,27 +113,6 @@ public class BukkitInputHandlerTest {
 
         // Finally, let's make sure the values are correct
         assertSame(Material.DIAMOND, ((ItemStack) output[0]).getType());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    @Disabled(value = "No handler for MaterialData exists anymore")
-    public void testMaterialData() throws InputException {
-        Class[] inputTypes = {MaterialData.class};
-        String[] input = {"diamond_shovel:24"};
-
-        Object[] output = typeHandler.instantiateTypes(inputTypes, Arrays.asList(input));
-
-        // First let's make sure we didn't lose anything, or get anything
-        assertEquals(inputTypes.length, output.length);
-
-        // Next let's make sure everything is the right type
-        for (Object object : output) {
-            assertTrue(object instanceof MaterialData);
-        }
-
-        // Finally, let's make sure the values are correct
-        assertSame(Material.DIAMOND_SHOVEL, ((MaterialData) output[0]).getItemType());
     }
 
     @Test
@@ -198,6 +178,7 @@ public class BukkitInputHandlerTest {
     }
 
     @Test
+    @Disabled("Cannot test input type that relies on registry data")
     public void testPotionEffectType() throws InputException {
         Class[] inputTypes = {PotionEffectType.class, PotionEffectType.class, PotionEffectType.class};
         String[] input = {"NIGHT_VISION", "speed", "iNviSiBilIty"};
@@ -219,6 +200,7 @@ public class BukkitInputHandlerTest {
     }
 
     @Test
+    @Disabled("Cannot test input type that relies on registry data")
     public void testPotionEffect() throws InputException {
         Class[] inputTypes = {PotionEffect.class, PotionEffect.class, PotionEffect.class};
         String[] input = {"NIGHT_VISION", "speed,200,5", "iNviSiBilIty,150,2"};

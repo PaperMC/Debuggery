@@ -17,6 +17,9 @@
 
 package io.zachbr.debuggery.reflection.types.handlers.bukkit;
 
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.registry.RegistryKey;
 import io.zachbr.debuggery.Logger;
 import io.zachbr.debuggery.reflection.types.TypeHandler;
 import io.zachbr.debuggery.reflection.types.handlers.base.Handler;
@@ -25,7 +28,21 @@ import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformExten
 import io.zachbr.debuggery.reflection.types.handlers.base.platform.PlatformSpecific;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.input.*;
 import io.zachbr.debuggery.reflection.types.handlers.bukkit.output.*;
+import org.bukkit.Fluid;
+import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Biome;
+import org.bukkit.block.BlockType;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.damage.DamageType;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
+import org.bukkit.inventory.ItemType;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.*;
 
@@ -57,11 +74,29 @@ public class BukkitBootstrap {
         bukkitHandlers.add(new PermissionInputHandler());
         bukkitHandlers.add(new PlayerInputHandler());
         bukkitHandlers.add(new PotionEffectInputHandler());
-        bukkitHandlers.add(new PotionEffectTypeInputHandler());
         bukkitHandlers.add(new VectorInputHandler());
         bukkitHandlers.add(new ComponentInputHandler());
         bukkitHandlers.add(new CommandSenderInputHandler());
         bukkitHandlers.add(new BlockInputHandler());
+
+        // registry
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.ATTRIBUTE, Attribute.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.BANNER_PATTERN, PatternType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.BIOME, Biome.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.BLOCK, BlockType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.ITEM, ItemType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.DAMAGE_TYPE, DamageType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.DATA_COMPONENT_TYPE, DataComponentType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.ENCHANTMENT, Enchantment.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.DIALOG, Dialog.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.ENTITY_TYPE, EntityType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.PARTICLE_TYPE, Particle.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.POTION, PotionType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.MOB_EFFECT, PotionEffectType.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.FLUID, Fluid.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.STRUCTURE, Structure.class));
+        bukkitHandlers.add(new RegistryElementInputHandler(RegistryKey.STRUCTURE_TYPE, StructureType.class));
+
         // register polymorphics last
         bukkitHandlers.add(new BlockDataInputHandler());
 
