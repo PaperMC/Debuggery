@@ -25,6 +25,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -62,9 +64,13 @@ public class EventCommand extends BukkitCommandReflection {
         }
 
         String clazz = args[0];
+        final Class<?> event = findEventClass(clazz);
+        if (event == null) {
+            sender.sendMessage(Component.text("Unknown class name %s!".formatted(clazz), NamedTextColor.RED));
+            return true;
+        }
 
         try {
-            Class<?> event = Class.forName(clazz, true, this.getClass().getClassLoader());
             getCommandReflection().updateReflectionClass(event);
             if (!Event.class.isAssignableFrom(event)) {
                 sender.sendMessage(Component.text("Provided class is not an event.", NamedTextColor.RED));
@@ -89,13 +95,12 @@ public class EventCommand extends BukkitCommandReflection {
         if (args.length == 0 || args.length == 1) {
             return knownEventClasses().stream().filter(className -> args.length == 0 || className.toLowerCase(Locale.ROOT).contains(args[0].toLowerCase(Locale.ROOT))).toList();
         }
-        try {
-            Class<?> event = Class.forName(args[0], true, this.getClass().getClassLoader());
-            getCommandReflection().updateReflectionClass(event);
-        } catch (ClassNotFoundException e) {
+        Class<?> event = findEventClass(args[0]);
+        if (event == null) {
             return List.of();
         }
 
+        getCommandReflection().updateReflectionClass(event);
         String[] trimmed = Arrays.copyOfRange(args, 1, args.length);
         if (trimmed.length == 0) {
             return List.of();
@@ -114,5 +119,20 @@ public class EventCommand extends BukkitCommandReflection {
         } catch (Throwable e) {
             return Set.of();
         }
+    }
+
+    private @Nullable Class<?> findEventClass(final String className) {
+        try {
+            return Class.forName(className, true, this.getClass().getClassLoader());
+        } catch (ClassNotFoundException e) {
+            // could be a plugin event, check plugin classloaders
+            for (final Plugin plugin : getPlugin().getServer().getPluginManager().getPlugins()) {
+                try {
+                    return Class.forName(className, true, plugin.getClass().getClassLoader());
+                } catch (ClassNotFoundException ignored) {}
+            }
+        }
+
+        return null;
     }
 }
