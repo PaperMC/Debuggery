@@ -60,4 +60,4 @@ from Bukkit's space delimiter system.
 Furthermore, every conversion from `string -> object` is added manually, so some are currently missing. Feel free to
 open an issue or contribute them.
 
-<img src="https://papermc.io/assets/misc/namespace-oss-badge.svg?project=Debuggery" alt="CI powered by namespace badge" />
+[![CI powered by namespace badge](https://papermc.io/assets/misc/namespace-oss-badge.svg?project=debuggery)](https://namespace.so/github-actions/?utm_source=oss&utm_campaign=papermc)
